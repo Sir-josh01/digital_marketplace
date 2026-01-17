@@ -1,0 +1,66 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-logo h2 {
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.nav-logo span {
+  color: var(--primary);
+}
+
+.nav-search input {
+  width: 400px;
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  outline: none;
+  transition: 0.3s;
+}
+
+.nav-search input:focus {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.nav-links a:hover {
+  color: var(--primary);
+}
+
+.cart-icon {
+  background: var(--primary);
+  border: none;
+  padding: 8px 15px;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+}

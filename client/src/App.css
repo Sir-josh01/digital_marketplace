@@ -1,0 +1,29 @@
+/* The root wrapper - covers the whole screen */
+.app-wrapper {
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  display: flex;
+  flex-direction: column;
+}
+
+/* The centered container for your content */
+.product-container {
+  width: 90%;
+  max-width: 1200px; /* Adjust this to your liking */
+  margin: 0 auto;    /* This centers the div */
+  padding: 20px 0;
+}
+
+.product-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .product-grid {
+    grid-template-columns: 1fr; /* Single column on small screens */
+  }
+}

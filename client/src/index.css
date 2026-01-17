@@ -1,0 +1,14 @@
+:root {
+  --primary: #6366f1;       /* Brand color (Indigo) */
+  --success: #10b981;       /* For "Purchase Successful" */
+  --bg-main: #0f172a;       /* Dark Navy Background */
+  --card-bg: #1e293b;       /* Slightly lighter for cards */
+  --text-main: #f8fafc;
+  --text-dim: #94a3b8;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+}
