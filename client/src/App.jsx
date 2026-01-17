@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios';
 import {Routes, Route} from 'react-router';
 import Navbar from "./components/Navbar";
 import Hero from './components/Hero';
 import HomePage from "./components/HomePage";
+import ProductDetails from './pages/ProductDetails'
+
 import "./App.css";
+import { CheckOutPage } from "./pages/CheckoutPage";
 
 function App() {
+  const [cart, setCart] = useState([]);
   const [products] = useState([
     {
       id: 1,
@@ -32,18 +37,29 @@ function App() {
       image: "https://via.placeholder.com/300x180",
     },
   ]);
+  const loadCart = async () => {
+    const res = axios.get();
+    setCart(res.data);
+    console.log("cart is loading...");
+    
+  } ;
+
+  useEffect(() => {
+    const offLoad = () => {
+    loadCart();
+    }
+    offLoad();
+  }, []);
 
   return (
     <>
       <div className="app-wrapper">
         <Navbar />
-        <Hero />
         <div className="product-container">
-
           <Routes>
-            <Route path="/" element={ <HomePage products={products} />} />
-            <Route path="/" element={ <HomePage products={products} />} />
-            {/* <Route path="/" element={ <HomePage products={products} />} /> */}
+            <Route index element={ <HomePage products={products} />} />
+            <Route path="/product/:id" element={ <ProductDetails products={products} />} />
+            <Route path="checkout" element={ <CheckOutPage cart={cart} />} />
           </Routes>
         </div>
       </div>

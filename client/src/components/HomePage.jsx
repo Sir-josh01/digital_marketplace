@@ -1,12 +1,15 @@
 import React from "react";
+import Hero from "./Hero";
 import CategoryFilter from "./CategoryFilter";
 import ProductCard from "./ProductCard";
+
+import './HomePage.css';
 
 const HomePage = ({ products }) => {
   return (
     <>
       <main>
-        {/* <Hero /> */}
+        <Hero />
         <CategoryFilter />
         <div className="product-grid">
           {products.map((product) => (

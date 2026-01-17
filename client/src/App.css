@@ -9,12 +9,15 @@
 /* The centered container for your content */
 .product-container {
   width: 90%;
-  max-width: 1200px; /* Adjust this to your liking */
-  margin: 0 auto;    /* This centers the div */
+  margin: 0 auto;    
   padding: 20px 0;
+  /* max-width: 1200px;  */
+
+  padding-top: 20px;
+  min-height: 80vh;
 }
 
-.product-grid {
+/* .product-grid {
   display: grid;
 
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -24,6 +27,6 @@
 
 @media (max-width: 600px) {
   .product-grid {
-    grid-template-columns: 1fr; /* Single column on small screens */
+    grid-template-columns: 1fr; 
   }
-}
+} */
