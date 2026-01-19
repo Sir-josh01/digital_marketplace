@@ -14,6 +14,7 @@
 .nav-logo h2 {
   font-weight: 700;
   letter-spacing: -1px;
+  cursor: pointer;
 }
 
 .nav-logo span {
@@ -64,6 +65,46 @@
   display: flex;
   gap: 8px;
 }
+
+/* cart button styling */
+.nav-cart {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cart-icon {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  position: relative; /* Anchor for the count */
+  padding: 5px;
+  transition: transform 0.2s ease;
+}
+
+.cart-icon:hover {
+  transform: scale(1.1);
+}
+
+.cart-count {
+  position: absolute;
+  top: -2px;
+  right: -5px;
+  background-color: var(--danger); /* Using the red we defined */
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white; /* Adds a clean gap between icon and badge */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 
 @media (max-width: 768px) {
   .navbar {

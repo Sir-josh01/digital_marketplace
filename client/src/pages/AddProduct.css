@@ -1,0 +1,44 @@
+.admin-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-form h2 {
+  color: var(--text-main);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.admin-form input, .admin-form textarea {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--text-dim);
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-size: 1rem;
+}
+
+.admin-form button {
+  padding: 15px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.admin-form button:hover {
+  background-color: var(--primary-hover);
+}

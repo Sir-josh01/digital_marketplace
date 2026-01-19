@@ -1,13 +1,19 @@
 import React from 'react';
 import { Header } from "./Header";
+import {Link} from 'react-router';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ cart, onCartClick }) => {
+  const itemCount = (cart || []).reduce((total, item) => total + item.quantity, 0);
   return (
     <>
     <nav className="navbar">
       <div className="nav-logo">
-        <h2>Byte<span>Market</span></h2>
+        <Link to='/'
+        style={{textDecoration: "none", color: "inherit" }}
+        >
+        <h2>Digital<span>Market</span></h2>
+        </Link>
       </div>
 
       <div className="nav-search">
@@ -17,9 +23,15 @@ const Navbar = () => {
       <ul className="nav-links">
         <li><a href="#browse">Browse</a></li>
         <li><a href="#sell">Start Selling</a></li>
+        <Link to="/admin" className="admin-link"
+        >Add Product
+        </Link>
+        
         <li className="nav-cart">
-          <button className="cart-icon">
-            🛒 <span className="cart-count">0</span>
+          <button className="cart-icon" onClick={onCartClick}>
+            🛒 {itemCount > 0 && (
+              <span className="cart-count">{itemCount}</span>
+            )}
           </button>
         </li>
       </ul>

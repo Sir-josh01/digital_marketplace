@@ -1,14 +1,57 @@
+/* new Root */
 :root {
-  --primary: #6366f1;       /* Brand color (Indigo) */
-  --success: #10b981;       /* For "Purchase Successful" */
-  --bg-main: #0f172a;       /* Dark Navy Background */
-  --card-bg: #1e293b;       /* Slightly lighter for cards */
+  /* Global Brand Colors */
+  --primary: #6366f1;
+  --primary-hover: #4338ca;
+  --success: #10b981;
+  --danger: #ef4444;
+
+  /* Main App Theme (Dark Mode) */
+  --bg-main: #0f172a;
+  --card-bg: #1e293b;
   --text-main: #f8fafc;
   --text-dim: #94a3b8;
+
+  /* Sidebar Specific (Light Mode appearance) */
+  --bg-sidebar: rgba(255, 255, 255, 0.95);
+  --sidebar-text: #1f2937; /* Renamed to avoid conflict */
+  --sidebar-muted: #6b7280; /* Renamed to avoid conflict */
+  --border: #e5e7eb;
 }
+
+/* :root {
+  --bg-sidebar: rgba(17, 24, 39, 0.9); 
+  --sidebar-text: #ffffff;
+  --sidebar-muted: #9ca3af;
+} */
+
+ /* old root combo */
+/* :root {
+  --primary: #6366f1;      
+  --success: #10b981;      
+  --bg-main: #0f172a;      
+  --card-bg: #1e293b;      
+  --text-main: #f8fafc;
+  --text-dim: #94a3b8;
+} */
+
+/* basic root for sidebar */
+/* :root {
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --bg-sidebar: rgba(255, 255, 255, 0.95);
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --danger: #ef4444;
+  --border: #e5e7eb;
+} */
 
 body {
   background-color: var(--bg-main);
   color: var(--text-main);
   font-family: 'Inter', sans-serif;
+  margin: 0;
+
+  overflow-x: hidden; /* This stops the sidebar from pushing the page width */
+  width: 100vw;
 }

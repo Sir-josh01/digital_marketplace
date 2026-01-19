@@ -1,3 +1,4 @@
+
 /* The root wrapper - covers the whole screen */
 .app-wrapper {
   min-height: 100vh;
@@ -16,3 +17,13 @@
   padding-top: 20px;
   min-height: 80vh;
 }
+
+
+/* Future Dark Mode Preview */
+[data-theme='dark'] {
+  --bg-sidebar: rgba(17, 24, 39, 0.95);
+  --text-main: #f9fafb;
+  --border: #374151;
+}
+
+

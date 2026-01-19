@@ -1,0 +1,1 @@
+export const API_BASE_URL = "http://localhost/fullstack_projects/digital_marketplace/server/api";
