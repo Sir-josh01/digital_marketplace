@@ -8,7 +8,7 @@
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 999;
 }
 
 .nav-logo h2 {
@@ -91,7 +91,7 @@
   position: absolute;
   top: -2px;
   right: -5px;
-  background-color: var(--danger); /* Using the red we defined */
+  background-color: var(--danger); /*Using the red we defined*/
   color: white;
   font-size: 0.7rem;
   font-weight: bold;

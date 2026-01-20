@@ -103,6 +103,8 @@ function App() {
         onCartClick={() => setCartOpen(true)} 
         cart={cart}  />
 
+        {cartOpen && <div className="sidebar-overlay" onClick={() => setCartOpen(false)}></div>}
+        
         <CartSidebar 
           cartOpen={cartOpen}
           onClose={() => setCartOpen(false)}

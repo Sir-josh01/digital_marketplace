@@ -2,10 +2,10 @@
 .cart-sidebar {
   position: fixed;
   top: 0;
-  right: -400px; /* Hidden by default */
-  width: 400px;
+  right: -50%; /* Hidden by default */
+  width: 50%;
   height: 100vh;
- background: var(--bg-sidebar, #111); /* Fallback to dark if var fails */
+  background: var(--bg-sidebar, #111); /* Fallback to dark if var fails */
   backdrop-filter: blur(10px); 
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
   z-index: 9999;
@@ -90,4 +90,41 @@
 
 .item-details p {
   color: var(--sidebar-muted);
+}
+
+/* Close Button Styling */
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--sidebar-text);
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+  padding: 0 5px;
+}
+
+.close-btn:hover {
+  color: var(--primary); /* Glowing effect on hover */
+  transform: rotate(90deg); /* Subtle animation */
+}
+
+/* Empty Cart State */
+.empty-msg {
+  text-align: center;
+  margin-top: 100px;
+  color: var(--sidebar-muted);
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Add a ghost icon effect if you like */
+.empty-msg::before {
+  content: '🛒';
+  font-size: 3rem;
+  opacity: 0.3;
+  filter: grayscale(1);
 }

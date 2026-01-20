@@ -4,7 +4,9 @@ import {Link} from 'react-router';
 import './Navbar.css';
 
 const Navbar = ({ cart, onCartClick }) => {
-  const itemCount = (cart || []).reduce((total, item) => total + item.quantity, 0);
+  // const itemCount = (cart || []).reduce((total, item) => total + item.quantity, 0);
+  const itemCount = (cart || []).length;
+  
   return (
     <>
     <nav className="navbar">

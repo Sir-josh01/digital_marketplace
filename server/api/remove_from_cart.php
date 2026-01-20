@@ -8,7 +8,7 @@ if (isset($data['cart_id'])) {
         $stmt = $pdo->prepare("DELETE FROM cart WHERE id = ?");
         $stmt->execute([$data['cart_id']]);
         
-        echo json_encode(["message" => "Item removed"]);
+        echo json_encode(["success" => true]);
     } catch (PDOException $e) {
         echo json_encode(["error" => $e->getMessage()]);
     }

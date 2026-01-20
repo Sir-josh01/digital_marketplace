@@ -26,4 +26,14 @@
   --border: #374151;
 }
 
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  backdrop-filter: blur(4px); /* Blurs the background products */
+  z-index: 999; /* Just below the sidebar (which is 1000) */
+}
 
