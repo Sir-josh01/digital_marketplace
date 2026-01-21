@@ -59,7 +59,6 @@ function App() {
       });
 
       // console.log("2. Server Response:", response.data);
-
       if (response.data.message) {
         // console.log("3. Success! Reloading cart...");
         alert("Success: " + response.data.message); // Temporary feedback

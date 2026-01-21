@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import SafeImage from './SafeImage';
 import "./CartSidebar.css";
 
 const CartSidebar = ({ cartOpen, onClose, cart, removeFromCart }) => {
@@ -57,10 +58,13 @@ const CartSidebar = ({ cartOpen, onClose, cart, removeFromCart }) => {
         ) : (
           cart.map((item) => (
             <div key={item.cart_id} className="cart-item">
-              <img
-                src={item.image || "https://via.placeholder.com/70"}
-                alt={item.title}
-              />
+            
+              <SafeImage 
+                src={item.image} 
+                alt={item.title} 
+                className="cart-thumb"
+               />
+
               <div className="item-details">
                 <h4>{item.title}</h4>
                 <p>${item.price}</p>

@@ -1,21 +1,38 @@
+
 .details-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 350px;
   gap: 40px;
-  padding: 40px 0;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 40px 20px;
 }
 
-.details-left { flex: 2; }
-.details-right { flex: 1; }
+.details-left {
+  flex: 2;
+}
+.details-right {
+  flex: 1;
+}
 
 .main-preview img {
   width: 100%;
   border-radius: 24px;
   border: 1px solid var(--border);
+  max-height: 500px; 
+  object-fit: cover;
 }
 
-.details-text h1 { margin: 20px 0 10px; font-size: 2.2rem; }
+.details-text h1 {
+  margin: 20px 0 10px;
+  font-size: 2.2rem;
+}
 
-.vendor-link span { color: var(--primary); font-weight: bold; cursor: pointer; }
+.vendor-link span {
+  color: var(--primary);
+  font-weight: bold;
+  cursor: pointer;
+}
 
 /* style add-btn */
 .add-to-cart-btn {
@@ -27,7 +44,14 @@
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s, background 0.3s;
+  color: var(--primary);
+  background: transparent;
+  border: 1px solid var(--primary);
+
+  transition: all 0.3s ease;
+  transition:
+    transform 0.2s,
+    background 0.3s;
 }
 
 .add-to-cart-btn:hover {
@@ -41,19 +65,27 @@
   color: white;
 }
 
+
 /* The Buy Box (Glassmorphism) */
 .buy-box {
   background: var(--glass);
+  backdrop-filter: blur(10px); /* Add this for true glass effect */
   border: 1px solid var(--border);
   border-radius: 24px;
   padding: 30px;
   position: sticky;
   top: 100px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-.price-tag { font-size: 2rem; font-weight: bold; margin-bottom: 20px; }
+.price-tag {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
 
-.add-to-cart-btn, .buy-now-btn {
+.add-to-cart-btn,
+.buy-now-btn {
   width: 100%;
   padding: 15px;
   border-radius: 12px;
@@ -62,11 +94,23 @@
   cursor: pointer;
 }
 
-.add-to-cart-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
-.buy-now-btn { background: var(--primary); border: none; color: white; }
+.buy-now-btn {
+  background: var(--primary);
+  border: none;
+  color: white;
+}
 
-.spec-list { list-style: none; margin-top: 25px; border-top: 1px solid var(--border); padding-top: 20px; }
-.spec-list li { font-size: 0.9rem; margin-bottom: 8px; color: var(--text-secondary); }
+.spec-list {
+  list-style: none;
+  margin-top: 25px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+.spec-list li {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
 
 /* to go back link */
 .back-link {
@@ -86,20 +130,128 @@
   text-decoration: underline;
 }
 
-
 .loader {
   display: flex;
+  flex-direction: column; /* Stack animation and text */
   justify-content: center;
   align-items: center;
   height: 80vh;
   color: var(--primary);
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1rem;
   letter-spacing: 2px;
+  gap: 15px;
+}
+
+/* Add a pulsing ring animation */
+.loader::before {
+  content: "";
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .error {
-  color: var(--danger);
+  color: var(--text-main);
   text-align: center;
-  margin-top: 50px;
+  margin-top: 100px;
+  background: rgba(255, 0, 0, 0.05); /* Very subtle red glow */
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--danger);
+  max-width: 400px;
+  margin-inline: auto;
+}
+
+.image-placeholder {
+  width: 60%;
+  aspect-ratio: 16 / 9; /* Keeps the rectangle shape consistent */
+  background: var(--glass); /* Matches your buy-box style */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  border: 2px dashed var(--border);
+  color: var(--sidebar-muted);
+  font-weight: 600;
+}
+
+
+/* These styling affects the one in the sidebar */
+
+/* 1. THE SHARED RULES: Both images and placeholders fill their container */
+.details-img, .product-img, .cart-thumb, .image-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit; 
+}
+
+/* 2. THE PLACEHOLDER STYLE: Keeps your glassmorphism look */
+.image-placeholder {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border: 1px dashed var(--border);
+  color: var(--sidebar-muted);
+  font-size: 0.8rem;
+}
+
+.image-placeholder::before {
+  content: "🖼️";
+  font-size: 1.2rem;
+  opacity: 0.6;
+}
+
+/* 3. THE SIZE CONTROLLERS: This is the missing piece! */
+/* Use these classes on the DIV wrapping your SafeImage */
+
+/* .details-preview-wrapper {
+  width: 100%;
+  height: 400px;
+  border-radius: 24px;
+  overflow: hidden;
+} */
+
+/* .sidebar-thumb-wrapper {
+  width: 70px;  
+  height: 70px;
+  flex-shrink: 0; 
+  border-radius: 8px;
+  overflow: hidden;
+} */
+
+/* for smaller screens */
+@media (max-width: 900px) {
+  .details-container {
+    /* Switch from 2 columns to 1 column */
+    grid-template-columns: 1fr; 
+    gap: 20px;
+    padding: 20px;
+  }
+
+  /* Make the sidebar purchase box stop sticking and flow naturally */
+  .buy-box {
+    position: static; 
+    width: 90%;
+    margin-top: 20px;
+  }
+
+  .details-preview-wrapper {
+    height: 300px; 
+  }
+
+  .details-text h1 {
+    font-size: 1.8rem; /* Slightly smaller text for mobile */
+  }
 }

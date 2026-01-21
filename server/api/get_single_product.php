@@ -7,7 +7,7 @@ if ($id) {
     try {
         $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
         $stmt->execute([$id]);
-        $product = $stmt->fetch();
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($product) {
             echo json_encode($product);

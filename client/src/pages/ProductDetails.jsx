@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { API_BASE_URL } from "../config";
 import axios from "axios";
+import SafeImage from "../components/SafeImage";
 import "./ProductDetails.css";
 
 const ProductDetails = ({ addToCart }) => {
@@ -19,8 +20,6 @@ const ProductDetails = ({ addToCart }) => {
         const res = await axios.get(
           `${API_BASE_URL}/get_single_product.php?id=${id}`,
         );
-        // setProduct(res.data);
-        // console.log("Product details acquired")
 
         // IMPORTANT: If PHP returns an array, take the first item
         const data = Array.isArray(res.data) ? res.data[0] : res.data;
@@ -37,21 +36,17 @@ const ProductDetails = ({ addToCart }) => {
   }, [id]);
 
   if (loading) return <div className="loader">LOADING PRODUCTS...</div>;
-  if (!product) return <div className="error">PRODUCT NOT FOUND.</div>;
-  // Find the specific product from the array passed from App.jsx
-  // const foundProduct = products.find((p) => p.id === parseInt(id));
 
-  // Mock data for a single product
-  // const data = foundProduct || {
-  //   title: "Premium SaaS Dashboard Template",
-  //   price: 49.0,
-  //   vendor: "CodeWizard",
-  //   description:
-  //     "Build your next application with this high-quality React dashboard. Includes 50+ components, dark mode support, and fully responsive layouts.",
-  //   format: "React/Next.js",
-  //   size: "12.4 MB",
-  //   lastUpdate: "Oct 2025",
-  // };
+  if (!product) return (
+  <div className="error">
+    <h2>Oops! Asset Not Found</h2>
+    <p>This item might have been removed from the marketplace.</p>
+    <button className="back-link" onClick={() => navigate('/')} style={{margin: '20px auto'}}>
+      Return to Home
+    </button>
+  </div>
+);
+
 
   return (
     <>
@@ -62,12 +57,11 @@ const ProductDetails = ({ addToCart }) => {
           </button>
 
           <div className="main-preview">
-            {/* <img src={product.image || "https://via.placeholder.com/800x450"} alt={product.title} /> */}
-            {product.image ? (
-              <img src={product.image} alt={product.title} />
-            ) : (
-              <div className="image-placeholder">No Image Available</div>
-            )}
+           <SafeImage 
+              src={product.image}
+              alt={product.title} 
+              className="details-img" 
+            />
           </div>
 
           <div className="details-text">
@@ -88,7 +82,6 @@ const ProductDetails = ({ addToCart }) => {
               onClick={() => {
                 console.log("Button clicked. Current product state:", product);
                 addToCart(product?.id || product?.product_id);
-                // addToCart(product.id);
               }}
             >
               Add to Cart
