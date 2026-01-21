@@ -12,6 +12,19 @@ const HomePage = ({ addToCart }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  // COMBINED FILTER LOGIC
+const filteredProducts = React.useMemo(() => {
+  return products.filter((product) => {
+    const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = activeCategory === "All" || product.category === activeCategory;
+    return matchesSearch && matchesCategory;
+  });
+}, [searchTerm, activeCategory, products]);
+
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -34,10 +47,27 @@ const HomePage = ({ addToCart }) => {
     <>
       <main>
         <Hero />
-        <CategoryFilter />
+
+        <div className="search-section">
+          {/* <div className="search-input-wrapper"> */}
+            {/* <span className="search-icon">🔍</span> */}
+            <input 
+              type="text" 
+              placeholder="Search for templates, graphics..." 
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="main-search-bar"
+            />
+          {/* </div> */}
+        </div>
+
+        <CategoryFilter
+          activeCategory={activeCategory}
+          setActiveCategory={setActiveCategory} 
+        />
+
         <div className="product-grid">
-          {products.length > 0 ? (
-            products.map((product) => (
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map(product => (
               <ProductCard 
                 key={product.id}
                 product={product}

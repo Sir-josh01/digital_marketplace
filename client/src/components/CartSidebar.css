@@ -43,8 +43,8 @@
 }
 
 .cart-item img {
-  width: 70px;
-  height: 70px;
+  width: 50%;
+  height: 50%;
   border-radius: 8px;
   object-fit: cover;
 }
