@@ -52,19 +52,19 @@ function App() {
   };
 
   const addToCart = async (productId) => {
-    console.log("1. Add to cart triggered for ID:", productId);
+    // console.log("1. Add to cart triggered for ID:", productId);
     try {
       const response = await axios.post(`${API_BASE_URL}/add_to_cart.php`, {
         product_id: productId
       });
 
-      console.log("2. Server Response:", response.data);
+      // console.log("2. Server Response:", response.data);
 
       if (response.data.message) {
-        console.log("3. Success! Reloading cart...");
+        // console.log("3. Success! Reloading cart...");
         alert("Success: " + response.data.message); // Temporary feedback
         loadCart();
-        // setCartOpen(true);
+        setCartOpen(true);
       }
     } catch(error) {
       console.error("Error adding to cart:", error);
@@ -90,8 +90,8 @@ function App() {
 
   useEffect(() => {
     const offLoad = () => {
-    loadCart();
-    }
+        loadCart();
+      }
     offLoad();
   }, []);
 
@@ -100,11 +100,11 @@ function App() {
       <div className="app-wrapper">
 
         <Navbar 
-        onCartClick={() => setCartOpen(true)} 
-        cart={cart}  />
+          onCartClick={() => setCartOpen(true)} 
+          cart={cart}  />
 
         {cartOpen && <div className="sidebar-overlay" onClick={() => setCartOpen(false)}></div>}
-        
+
         <CartSidebar 
           cartOpen={cartOpen}
           onClose={() => setCartOpen(false)}
@@ -114,7 +114,7 @@ function App() {
 
         <div className="product-container">
           <Routes>
-            <Route index element={ <HomePage products={products} />} />
+            <Route index element={ <HomePage products={products} addToCart={addToCart} />} />
             <Route path="/product/:id" element={ <ProductDetails products={products} addToCart={addToCart} />} />
             {/* <Route path="checkout" element={ <CheckOutPage cart={cart} />} /> */}
             {/* <Route path="orders" element={ <OrdersPage cart={cart} />} /> */}

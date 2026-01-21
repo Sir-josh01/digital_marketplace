@@ -2,7 +2,7 @@
 .cart-sidebar {
   position: fixed;
   top: 0;
-  right: -50%; /* Hidden by default */
+  right: -50%; 
   width: 50%;
   height: 100vh;
   background: var(--bg-sidebar, #111); /* Fallback to dark if var fails */
@@ -13,11 +13,11 @@
   flex-direction: column;
   transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 
-  color: var(--sidebar-text); /* Use the new unique name */
+  color: var(--sidebar-text);
 }
 
 .cart-sidebar.open {
-  right: 0; /* Slide in */
+  right: 0; /* Slide in sidebar*/
 }
 
 .cart-header {

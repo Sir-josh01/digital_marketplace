@@ -12,6 +12,7 @@
   width: 90%;
   margin: 0 auto;    
   padding: 20px 0;
+  max-width: 1400px; 
   /* max-width: 1200px;  */
 
   padding-top: 20px;
@@ -35,5 +36,27 @@
   background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
   backdrop-filter: blur(4px); /* Blurs the background products */
   z-index: 999; /* Just below the sidebar (which is 1000) */
+}
+
+/* For Place holder images */
+.image-fallback {
+  width: 100%;
+  height: 200px; /* Adjust based on your card height */
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px dashed var(--border);
+  color: var(--sidebar-muted);
+  font-size: 0.8rem;
+  gap: 10px;
+}
+
+.image-fallback::before {
+  content: '📁'; /* Digital asset icon */
+  font-size: 2rem;
+  opacity: 0.5;
 }
 

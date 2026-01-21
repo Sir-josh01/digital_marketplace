@@ -12,7 +12,10 @@ const ProductCard = ({ product }) => {
     >
       <div className="product-card">
         <div className="product-image">
-          <img src={image} alt={title} />
+          <img 
+            src={image || "https://via.placeholder.com/300x200?text=No+Image"} 
+            alt={product.title} 
+          />
           <span className="category-tag">{category}</span>
         </div>
 
