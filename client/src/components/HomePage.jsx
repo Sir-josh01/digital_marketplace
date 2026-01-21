@@ -8,12 +8,12 @@ import { API_BASE_URL } from "../config";
 
 import "./HomePage.css";
 
-const HomePage = ({ addToCart }) => {
+const HomePage = ({ addToCart, searchTerm, setSearchTerm, activeCategory, setActiveCategory, handleClearFilters }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
+  const isFiltered = searchTerm !== "" || activeCategory !== "All";
+ 
 
   // COMBINED FILTER LOGIC
 const filteredProducts = React.useMemo(() => {
@@ -65,6 +65,12 @@ const filteredProducts = React.useMemo(() => {
           setActiveCategory={setActiveCategory} 
         />
 
+        {isFiltered && (
+          <button className="clear-filters-btn" onClick={handleClearFilters}>
+              Reset Filters ✕
+          </button>
+        )}
+
         <div className="product-grid">
           {filteredProducts.length > 0 ? (
             filteredProducts.map(product => (
@@ -76,8 +82,11 @@ const filteredProducts = React.useMemo(() => {
             ))
           ) : (
             <div className="empty-state">
-              <h3>No digital assets available yet.</h3>
+              <h3>No digital assets available yet for "{searchTerm}".</h3>
               <p>Check back soon or start selling your own!</p>
+              <button className="clear-filters-btn secondary" onClick={handleClearFilters}>
+                Clear all filters
+              </button>
             </div>
           )}
         </div>

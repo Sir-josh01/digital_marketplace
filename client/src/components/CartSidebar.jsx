@@ -1,8 +1,14 @@
 import React, { useEffect } from "react";
-import SafeImage from './SafeImage';
+import SafeImage from "./SafeImage";
 import "./CartSidebar.css";
 
-const CartSidebar = ({ cartOpen, onClose, cart, removeFromCart }) => {
+const CartSidebar = ({
+  cartOpen,
+  onClose,
+  cart,
+  removeFromCart,
+  updateQuantity,
+}) => {
   // Calculate total price from the database results
   const total = (cart || []).reduce(
     (sum, item) => sum + parseFloat(item.price) * (item.quantity || 1),
@@ -57,25 +63,46 @@ const CartSidebar = ({ cartOpen, onClose, cart, removeFromCart }) => {
           </>
         ) : (
           cart.map((item) => (
-            <div key={item.cart_id} className="cart-item">
-            
-              <SafeImage 
-                src={item.image} 
-                alt={item.title} 
-                className="cart-thumb"
-               />
+              <div key={item.cart_id} className="cart-item">
+                <SafeImage
+                  src={item.image}
+                  alt={item.title}
+                  className="cart-thumb"
+                />
 
-              <div className="item-details">
-                <h4>{item.title}</h4>
-                <p>${item.price}</p>
-                <button
-                  className="remove-link"
-                  onClick={() => removeFromCart(item.cart_id)}
-                >
-                  Remove
-                </button>
+                <div className="item-details">
+                  <h4>{item.title}</h4>
+                  <p>
+                    ${item.price}{" "}
+                    {item.quantity > 1 && (
+                      <span className="qty-pill">x{item.quantity}</span>
+                    )}
+                  </p>
+
+                  <button
+                    className="remove-link"
+                    onClick={() => removeFromCart(item.cart_id)}
+                  >
+                    Remove
+                  </button>
+                  <div className="qty-controls">
+                    <button
+                      onClick={() => updateQuantity(item.id, -1)}
+                      className="qty-btn"
+                    >
+                      −
+                    </button>
+                    <span className="qty-number">{item.quantity}</span>
+                    <button
+                      onClick={() => updateQuantity(item.id, 1)}
+                      className="qty-btn"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
+              
           ))
         )}
       </div>
