@@ -14,20 +14,17 @@ const ProductDetails = ({ addToCart }) => {
 
   useEffect(() => {
     const getProduct = async () => {
-      console.log("1.Trying to get product-details");
-
+      // console.log("1.Trying to get product-details");
       try {
         const res = await axios.get(
           `${API_BASE_URL}/get_single_product.php?id=${id}`,
         );
-
         // IMPORTANT: If PHP returns an array, take the first item
         const data = Array.isArray(res.data) ? res.data[0] : res.data;
-
         setProduct(data);
         // console.log("Product details acquired:", data);
       } catch (err) {
-        // console.log("Failed to fetch products", err);
+        console.log("Failed to fetch products at productDetails: ", err);
       } finally {
         setLoading(false);
       }
@@ -84,8 +81,11 @@ const ProductDetails = ({ addToCart }) => {
             <button
               className="add-to-cart-btn"
               onClick={() => {
-                console.log("Button clicked. Current product state:", product);
-                addToCart(product?.id || product?.product_id);
+                // console.log("Button clicked. Current product state:", product);
+                addToCart(
+                  // product?.id || product?.product_id
+                  product.id
+                );
               }}
             >
               Add to Cart

@@ -20,10 +20,13 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
+  const [view, setView] = useState("shop") //shop, success, checkout
+
+
   const loadCart = async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/get_cart.php`);
-      
+
       setCart(res.data);
       console.log("cart is loading...");
     } catch (err) {
@@ -38,12 +41,16 @@ function App() {
       });
 
       if (response.data.success) {
+        console.log("product added!");
+        
         showToast(response.data.message);
         await loadCart();
         // setCartOpen(true);
       }
     } catch (error) {
       showToast("Error adding item to cart.", error);
+      console.log('Failed adding product');
+      
     }
   };
 
@@ -106,6 +113,23 @@ function App() {
     setTimeout(() => {
       setToast({ show: false, message: "" });
     }, 3000);
+  };
+
+  const handleProceedToCheckout = () => {
+    if (cart.length === 0) return showToast("Cart is empty");
+    setCartOpen(false);
+    setView("checkout");
+  }
+
+  const completePurchase = async () => {
+    try {
+      // Clear the cart in the DB (we reuse your clear_cart logic)
+      await axios.post(`${API_BASE_URL}/clear_cart.php`);
+      setCart([]);
+      setView("success");
+    } catch(err) {
+      setToast("Transaction failed");
+    }
   };
 
   useEffect(() => {

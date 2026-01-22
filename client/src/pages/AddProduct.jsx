@@ -16,15 +16,15 @@ const AddProduct = () => {
   });
 
   const handleSubmit = async (e) => {
+    if (!form) return;
+    
     e.preventDefault();
     try {
       const res = await axios.post(`${API_BASE_URL}/add_product.php`, form);
       if (res.data.message) {
         console.log("product added sharp!!");  
       }
-      alert("Product Added!");
-      // FIXED: Resetting all fields including image
- 
+      alert("Product Added!"); 
       setForm({ title: "", price: "", vendor: "", description: "", image: "", category: "Graphics", format: "ZIP", size: "" });
     } catch (err) {
       alert("Error adding product", err);

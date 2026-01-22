@@ -8,6 +8,7 @@ const CartSidebar = ({
   cart,
   removeFromCart,
   updateQuantity,
+  handleProceedToCheckout
 }) => {
   // Calculate total price from the database results
   const total = (cart || []).reduce(
@@ -17,14 +18,10 @@ const CartSidebar = ({
 
   useEffect(() => {
     if (cartOpen) {
-      // Prevent the body from scrolling
       document.body.style.overflow = "hidden";
     } else {
-      // Let the body scroll again
       document.body.style.overflow = "auto";
     }
-
-    // Clean up function to ensure scroll returns if component unmounts
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -63,29 +60,29 @@ const CartSidebar = ({
           </>
         ) : (
           cart.map((item) => (
-              <div key={item.cart_id} className="cart-item">
-                <SafeImage
-                  src={item.image}
-                  alt={item.title}
-                  className="cart-thumb"
-                />
+            <div key={item.cart_id} className="cart-item">
+              <SafeImage
+                src={item.image}
+                alt={item.title}
+                className="cart-thumb"
+              />
 
-                <div className="item-details">
-                  <h4>{item.title}</h4>
-                  <p>
-                    ${item.price}{" "}
-                    {item.quantity > 1 && (
-                      <span className="qty-pill">x{item.quantity}</span>
-                    )}
-                  </p>
+              <div className="item-details">
+                <h4>{item.title}</h4>
+                <p>
+                  ${item.price}{" "}
+                  {item.quantity > 1 && (
+                    <span className="qty-pill">x{item.quantity}</span>
+                  )}
+                </p>
 
-                  <button
-                    className="remove-link"
-                    onClick={() => removeFromCart(item.cart_id)}
-                  >
-                    Remove
-                  </button>
-                  {/* <div className="qty-controls">
+                <button
+                  className="remove-link"
+                  onClick={() => removeFromCart(item.cart_id)}
+                >
+                  Remove
+                </button>
+                {/* <div className="qty-controls">
                     <button
                       onClick={() => updateQuantity(item.id, -1)}
                       className="qty-btn"
@@ -100,9 +97,8 @@ const CartSidebar = ({
                       +
                     </button>
                   </div> */}
-                </div>
               </div>
-              
+            </div>
           ))
         )}
       </div>
@@ -113,7 +109,12 @@ const CartSidebar = ({
             <span>Total:</span>
             <span>${total.toFixed(2)}</span>
           </div>
-          <button className="checkout-btn">Proceed to Checkout</button>
+          <button 
+          className="checkout-btn"
+          onClick={handleProceedToCheckout}
+          >
+            Proceed to Checkout
+          </button>
         </div>
       )}
     </div>

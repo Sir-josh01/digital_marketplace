@@ -13,7 +13,7 @@ const ProductCard = ({ product }) => {
       <div className="product-card">
         <div className="product-image">
           <img 
-            src={image || "https://via.placeholder.com/300x200?text=No+Image"} 
+            src={image || "../assets/react.svg"} 
             alt={product.title} 
           />
           <span className="category-tag">{category}</span>
