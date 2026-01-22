@@ -1,0 +1,19 @@
+# --- Node / React (Client) ---
+client/node_modules/
+client/dist/
+client/build/
+client/.env*
+client/npm-debug.log*
+
+# --- PHP / Backend (Server) ---
+# Ignore specific DB config so password doesn't leak!
+server/db_config.php 
+server/api_init.php (only if it contains passwords)
+server/*.log
+server/.env
+
+# --- System / IDE ---
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
