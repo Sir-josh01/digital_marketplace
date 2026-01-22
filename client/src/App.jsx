@@ -1,56 +1,32 @@
 import { useState, useEffect } from "react";
-import axios from 'axios';
-import {Routes, Route} from 'react-router';
+import axios from "axios";
+import { Routes, Route } from "react-router";
 import Navbar from "./components/Navbar";
 import HomePage from "./components/HomePage";
-import ProductDetails from './pages/ProductDetails'
+import ProductDetails from "./pages/ProductDetails";
 import CartSidebar from "./components/CartSidebar";
 import "./App.css";
 import { CheckOutPage } from "./pages/CheckoutPage";
 import { OrdersPage } from "./pages/orders/OrdersPage";
 import { API_BASE_URL } from "./config";
 import AddProduct from "./pages/AddProduct";
-import Toast from './components/Toast';
+import Toast from "./components/Toast";
 
 function App() {
+  const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
-   const [toast, setToast] = useState({ show: false, message: "" });
-    const [searchTerm, setSearchTerm] = useState("");
-     const [activeCategory, setActiveCategory] = useState("All");
-  const [products] = useState([
-    {
-      id: 1,
-      title: "Premium SaaS Dashboard",
-      price: 49,
-      vendor: "CodeWizard",
-      category: "Templates",
-      image: "https://via.placeholder.com/300x180",
-    },
-    {
-      id: 2,
-      title: "Abstract 3D Icon Set",
-      price: 15,
-      vendor: "PixelPerfect",
-      category: "Graphics",
-      image: "https://via.placeholder.com/300x180",
-    },
-    {
-      id: 3,
-      title: "React E-commerce Starter",
-      price: 89,
-      vendor: "FullStackPro",
-      category: "Scripts",
-      image: "https://via.placeholder.com/300x180",
-    },
-  ]);
+  const [toast, setToast] = useState({ show: false, message: "" });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
 
   const loadCart = async () => {
     try {
-    const res = await axios.get(`${API_BASE_URL}/get_cart.php`);
-    setCart(res.data);
-    console.log("cart is loading...");
-    } catch(err) {
+      const res = await axios.get(`${API_BASE_URL}/get_cart.php`);
+      
+      setCart(res.data);
+      console.log("cart is loading...");
+    } catch (err) {
       console.log("Cart fetch failed at the loadCart", err);
     }
   };
@@ -58,43 +34,56 @@ function App() {
   const addToCart = async (productId) => {
     try {
       const response = await axios.post(`${API_BASE_URL}/add_to_cart.php`, {
-        product_id: productId
-      });
-
-     if (response.data.success) {
-      showToast(response.data.message); 
-      await loadCart();
-      // setCartOpen(true);
-    } 
-  } catch(error) {
-    showToast("Error adding item to cart.", error);
-  }
-  }
-
-  const updateQuantity = async (productId, change) => {
-  try {
-    const res = await axios.post(`${API_BASE_URL}/update_cart_quantity.php`, {
-      product_id: productId,
-      change: change
-    });
-    
-    if (res.data.success) {
-      loadCart(); // Refresh the list
-    }
-  } catch (err) {
-    showToast("Could not update quantity");
-  }
-};
-
-  const removeFromCart = async (cartId) => {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/remove_from_cart.php`, {
-        cart_id: cartId
+        product_id: productId,
       });
 
       if (response.data.success) {
+        showToast(response.data.message);
+        await loadCart();
+        // setCartOpen(true);
+      }
+    } catch (error) {
+      showToast("Error adding item to cart.", error);
+    }
+  };
+
+  const updateQuantity = async (productId, change) => {
+    try {
+      const res = await axios.post(`${API_BASE_URL}/update_cart_quantity.php`, {
+        product_id: productId,
+        change: change,
+      });
+      console.log("Full Axios Response:", res);
+      if (res.data.success) {
+        await loadCart();
+      } else {
+        console.error(
+          "Logic Error:",
+          res.data ? res.data.message : "No data received from server",
+        );
+      }
+    } catch (err) {
+      showToast("Could not update quantity");
+      console.error("Network Error:", err);
+      console.error(
+        "System Error:",
+        err.response ? err.response.data : err.message,
+      );
+    }
+  };
+
+  const removeFromCart = async (cartId) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/remove_from_cart.php`,
+        {
+          cart_id: cartId,
+        },
+      );
+
+      if (response.data.success) {
         showToast("Item removed from cart");
-        loadCart(); 
+        loadCart();
       }
     } catch (error) {
       showToast("Failed to remove item");
@@ -102,62 +91,77 @@ function App() {
     }
   };
 
-const handleClearFilters = () => {
-  setSearchTerm("");
-  setActiveCategory("All");
-  // This clears the physical text in the input box
-  const searchInput = document.querySelector('.main-search-bar');
-  if (searchInput) searchInput.value = "";
-};
+  const handleClearFilters = () => {
+    setSearchTerm("");
+    setActiveCategory("All");
+    // This clears the physical text in the input box
+    const searchInput = document.querySelector(".main-search-bar");
+    if (searchInput) searchInput.value = "";
+  };
 
-
-// The showToast function
-const showToast = (msg) => {
-  setToast({ show: true, message: msg });
-  // Auto-hide after 3 seconds
-  setTimeout(() => {
-    setToast({ show: false, message: "" });
-  }, 3000);
-};
+  // The showToast function
+  const showToast = (msg) => {
+    setToast({ show: true, message: msg });
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+      setToast({ show: false, message: "" });
+    }, 3000);
+  };
 
   useEffect(() => {
     const offLoad = () => {
-        loadCart();
-      }
+      loadCart();
+    };
     offLoad();
   }, []);
 
   return (
     <>
-
-    {toast.show && <Toast message={toast.message} onClose={() => setToast({ show: false, message: "" })} />}
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          onClose={() => setToast({ show: false, message: "" })}
+        />
+      )}
       <div className="app-wrapper">
+        <Navbar onCartClick={() => setCartOpen(true)} cart={cart} />
 
-        <Navbar 
-          onCartClick={() => setCartOpen(true)} 
-          cart={cart}  />
+        {cartOpen && (
+          <div
+            className="sidebar-overlay"
+            onClick={() => setCartOpen(false)}
+          ></div>
+        )}
 
-        {cartOpen && <div className="sidebar-overlay" onClick={() => setCartOpen(false)}></div>}
-
-        <CartSidebar 
+        <CartSidebar
           cartOpen={cartOpen}
           onClose={() => setCartOpen(false)}
           cart={cart}
           removeFromCart={removeFromCart}
           updateQuantity={updateQuantity}
-        /> 
+        />
 
         <div className="product-container">
           <Routes>
-            <Route index element={<HomePage 
-              products={products} 
-              addToCart={addToCart} 
-              handleClearFilters={handleClearFilters}
-              searchTerm={searchTerm}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-              />} />
-            <Route path="/product/:id" element={ <ProductDetails products={products} addToCart={addToCart} />} />
+            <Route
+              index
+              element={
+                <HomePage
+                  products={products}
+                  addToCart={addToCart}
+                  handleClearFilters={handleClearFilters}
+                  searchTerm={searchTerm}
+                  activeCategory={activeCategory}
+                  setActiveCategory={setActiveCategory}
+                />
+              }
+            />
+            <Route
+              path="/product/:id"
+              element={
+                <ProductDetails products={products} addToCart={addToCart} />
+              }
+            />
             {/* <Route path="checkout" element={ <CheckOutPage cart={cart} />} /> */}
             {/* <Route path="orders" element={ <OrdersPage cart={cart} />} /> */}
             <Route path="/admin" element={<AddProduct />} />

@@ -25,9 +25,9 @@ const ProductDetails = ({ addToCart }) => {
         const data = Array.isArray(res.data) ? res.data[0] : res.data;
 
         setProduct(data);
-        console.log("Product details acquired:", data);
+        // console.log("Product details acquired:", data);
       } catch (err) {
-        console.log("Failed to fetch products", err);
+        // console.log("Failed to fetch products", err);
       } finally {
         setLoading(false);
       }
@@ -37,16 +37,20 @@ const ProductDetails = ({ addToCart }) => {
 
   if (loading) return <div className="loader">LOADING PRODUCTS...</div>;
 
-  if (!product) return (
-  <div className="error">
-    <h2>Oops! Asset Not Found</h2>
-    <p>This item might have been removed from the marketplace.</p>
-    <button className="back-link" onClick={() => navigate('/')} style={{margin: '20px auto'}}>
-      Return to Home
-    </button>
-  </div>
-);
-
+  if (!product)
+    return (
+      <div className="error">
+        <h2>Oops! Asset Not Found</h2>
+        <p>This item might have been removed from the marketplace.</p>
+        <button
+          className="back-link"
+          onClick={() => navigate("/")}
+          style={{ margin: "20px auto" }}
+        >
+          Return to Home
+        </button>
+      </div>
+    );
 
   return (
     <>
@@ -57,10 +61,10 @@ const ProductDetails = ({ addToCart }) => {
           </button>
 
           <div className="main-preview">
-           <SafeImage 
+            <SafeImage
               src={product.image}
-              alt={product.title} 
-              className="details-img" 
+              alt={product.title}
+              className="details-img"
             />
           </div>
 

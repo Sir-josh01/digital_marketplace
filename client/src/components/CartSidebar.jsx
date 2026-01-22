@@ -85,7 +85,7 @@ const CartSidebar = ({
                   >
                     Remove
                   </button>
-                  <div className="qty-controls">
+                  {/* <div className="qty-controls">
                     <button
                       onClick={() => updateQuantity(item.id, -1)}
                       className="qty-btn"
@@ -99,7 +99,7 @@ const CartSidebar = ({
                     >
                       +
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               

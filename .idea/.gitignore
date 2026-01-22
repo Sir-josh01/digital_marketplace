@@ -1,0 +1,25 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+# --- Frontend (React) ---
+/client/node_modules
+/client/build
+/client/.env.local
+/client/.env.development.local
+
+# --- Backend (PHP) ---
+/server/config.php
+/server/*.log
+/server/.env
+
+# --- OS/Tools ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
