@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Routes, Route } from "react-router";
+import { Routes, Route, useNavigate } from "react-router";
 import Navbar from "./components/Navbar";
 import HomePage from "./components/HomePage";
 import ProductDetails from "./pages/ProductDetails";
@@ -21,6 +21,7 @@ function App() {
   const [activeCategory, setActiveCategory] = useState("All");
 
   const [view, setView] = useState("shop") //shop, success, checkout
+  const navigate = useNavigate();
 
 
   const loadCart = async () => {
@@ -118,7 +119,7 @@ function App() {
   const handleProceedToCheckout = () => {
     if (cart.length === 0) return showToast("Cart is empty");
     setCartOpen(false);
-    setView("checkout");
+    navigate("/checkout");
   }
 
   const completePurchase = async () => {
@@ -147,6 +148,7 @@ function App() {
           onClose={() => setToast({ show: false, message: "" })}
         />
       )}
+
       <div className="app-wrapper">
         <Navbar onCartClick={() => setCartOpen(true)} cart={cart} />
 
@@ -163,6 +165,7 @@ function App() {
           cart={cart}
           removeFromCart={removeFromCart}
           updateQuantity={updateQuantity}
+          handleProceedToCheckout={handleProceedToCheckout}
         />
 
         <div className="product-container">
@@ -186,7 +189,16 @@ function App() {
                 <ProductDetails products={products} addToCart={addToCart} />
               }
             />
-            {/* <Route path="checkout" element={ <CheckOutPage cart={cart} />} /> */}
+            <Route 
+              path="checkout" 
+              element={
+                <CheckOutPage 
+                  cart={cart}
+                  completePurchase={completePurchase} 
+                  
+                  />
+              } 
+            />
             {/* <Route path="orders" element={ <OrdersPage cart={cart} />} /> */}
             <Route path="/admin" element={<AddProduct />} />
           </Routes>

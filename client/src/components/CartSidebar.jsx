@@ -11,10 +11,10 @@ const CartSidebar = ({
   handleProceedToCheckout
 }) => {
   // Calculate total price from the database results
-  const total = (cart || []).reduce(
-    (sum, item) => sum + parseFloat(item.price) * (item.quantity || 1),
-    0,
-  );
+  const total = (Array.isArray(cart) ? cart : []).reduce(
+  (acc, item) => acc + item.price * item.quantity, 
+  0
+);
 
   useEffect(() => {
     if (cartOpen) {

@@ -10,7 +10,64 @@
   letter-spacing: 2px;
 }
 
-/* Container for the search bar to give it spacing */
+/* Error State Container */
+.error-state {
+  grid-column: 1 / -1; /* Makes it span the whole width of the grid */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: var(--bg-card); /* Should match your card background */
+  border-radius: 20px;
+  border: 1px dashed #ff4d4d;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+.error-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.error-state h3 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+
+.error-state p {
+  color: #666;
+  max-width: 400px;
+  margin-bottom: 25px;
+}
+
+.retry-btn {
+  background: var(--primary); 
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.retry-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.retry-btn:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .search-section {
   width: 100%;
   display: flex;
@@ -40,35 +97,33 @@
 /* The actual Input Field */
 .main-search-bar {
   width: 100%;
-  max-width: 600px; /* Limits width on desktop */
+  max-width: 600px; 
   padding: 14px 25px;
   font-size: 1rem;
-  background: var(--glass); /* Matches your Buy Box */
+  background: var(--glass); 
   backdrop-filter: blur(10px);
   border: 1px solid var(--border);
-  border-radius: 50px; /* Makes it a pill shape */
+  border-radius: 50px; 
   color: white;
   outline: none;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Focus effect for better UX */
 .main-search-bar:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.15); /* Soft glow */
-  width: 105%; /* Subtle expand effect */
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.15);
+  width: 105%; 
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* Placeholder color */
 .main-search-bar::placeholder {
   color: var(--sidebar-muted);
   opacity: 0.7;
 }
 
 .empty-state {
-  grid-column: 1 / -1; /* Makes it span the full width of the grid */
+  grid-column: 1 / -1;
   text-align: center;
   padding: 60px 20px;
   background: var(--glass);
