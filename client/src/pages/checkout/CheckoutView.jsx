@@ -1,39 +1,56 @@
 import React from 'react';
+import SafeImage from '../../components/UI/SafeImage';
 
-const CheckoutView = ({ cart, total, onBack, onComplete }) => {
+import './CheckOutView.css';
+
+
+const CheckOutView = ({ cart, total, handlePayment, isSubmitting }) => {
   return (
-    <div className="checkout-container">
-      <button className="back-link" onClick={onBack}>← Back to Assets</button>
+    <div className="checkout-page">
+      <h2 className="page-title">Checkout Summary</h2>
       
       <div className="checkout-grid">
-        {/* Left Side: Summary */}
-        <div className="checkout-summary">
-          <h3>Order Summary</h3>
-          <div className="summary-items">
-            {cart.map((item) => (
-              <div key={item.id} className="summary-item">
-                <span>{item.title} (x{item.quantity})</span>
-                <span>${(item.price * item.quantity).toFixed(2)}</span>
+        {/* left side of the page */}
+        <div className="cart-items-section">
+          {cart.length > 0 ? (
+            cart.map((product) => (
+              <div key={product.title} className="checkout-item">
+                <SafeImage />
+                <div className="item-info">
+                  <h4>{product.title}</h4>
+                  <p>Vendor: {product.vendor}</p>
+                </div>
+                <p className="item-price">${product.price}</p>
               </div>
-            ))}
-          </div>
-          <div className="summary-total">
-            <span>Total to Pay:</span>
-            <span className="total-amount">${total.toFixed(2)}</span>
-          </div>
+            ))
+          ) : (
+            <p className="empty-msg">Your cart is currently empty.</p>
+          )}
         </div>
 
-        {/* Right Side: Simple Form */}
-        <div className="checkout-form">
-          <h3>Payment Details</h3>
-          <input type="email" placeholder="Email Address for delivery" />
-          <input type="text" placeholder="Card Number" />
-          <div className="form-row">
-            <input type="text" placeholder="MM/YY" />
-            <input type="text" placeholder="CVC" />
+        {/* Right Side: Order Summary Box */}
+        <div className="order-summary-box">
+          <h3>Order Total</h3>
+          <div className="summary-row">
+            <span>Items ({cart.length})</span>
+            <span>${total.toFixed(2)}</span>
           </div>
-          <button className="pay-btn" onClick={onComplete}>
-            Complete Purchase
+          <div className="summary-row">
+            <span>Platform Fee</span>
+            <span className="free-tag">Free</span>
+          </div>
+          <hr />
+          <div className="summary-row total">
+            <span>Total Amount</span>
+            <span>${total.toFixed(2)}</span>
+          </div>
+          
+          <button 
+            className={`pay-btn ${isSubmitting ? 'loading' : ''}`} 
+            disabled={cart.length === 0 || isSubmitting}
+            onClick={handlePayment}
+          >
+            {isSubmitting ? "Processing..." : "Complete Purchase"}
           </button>
         </div>
       </div>
@@ -41,4 +58,4 @@ const CheckoutView = ({ cart, total, onBack, onComplete }) => {
   );
 };
 
-export default CheckoutView;
+export default CheckOutView;

@@ -26,11 +26,9 @@ const Navbar = ({ cart, onCartClick }) => {
             </h2>
           </Link>
         </div>
-
         {/* <div className="nav-search">
         <input type="text" placeholder="Search digital assets..." />
       </div> */}
-
         <button className="theme-toggle" onClick={() => setIsDark(!isDark)}>
           <span className="toggle-icon">{isDark ? "☀️" : "🌙"}</span>
           <span className="toggle-text">
@@ -45,9 +43,15 @@ const Navbar = ({ cart, onCartClick }) => {
           <li>
             <a href="#sell">Start Selling</a>
           </li>
-          <Link to="/admin" className="admin-link">
+           <li>
+            <Link to="/history" className="history-link">My Orders</Link>
+          </li>
+          <li>
+            <Link to="/admin" className="admin-link">
             Add Product
           </Link>
+          </li>
+          
 
           <li className="nav-cart">
             <button className="cart-icon" onClick={onCartClick}>

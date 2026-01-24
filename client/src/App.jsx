@@ -12,6 +12,7 @@ import AddProduct from "./pages/admin/AddProduct";
 import Navbar from "./components/layout/Navbar";
 import CartSidebar from "./components/layout/CartSidebar";
 import Toast from "./components/UI/Toast";
+import OrderHistory from "./pages/orders/OrderHistory";
 
 // General styles and config
 import { API_BASE_URL } from "./config";
@@ -102,6 +103,11 @@ function App() {
     }
   };
 
+  const clearCart = () => {
+  setCart([]); // This empties the array instantly
+  localStorage.removeItem('cart'); // If you are saving the cart to local storage, clear that too!
+};
+
   const showToast = (msg) => {
     setToast({ show: true, message: msg });
     // Auto-hide after 3 seconds
@@ -126,6 +132,10 @@ function App() {
       setToast("Transaction failed");
     }
   };
+
+  useEffect(() => {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}, [cart]);
 
   useEffect(() => {
     const offLoad = () => {
@@ -185,12 +195,14 @@ function App() {
               element={
                 <CheckOutPage 
                   cart={cart}
-                  completePurchase={completePurchase} 
+                  // completePurchase={completePurchase} 
+                  clearCart={clearCart}
                   />
               } 
             />
-            {/* <Route path="orders" element={ <OrdersPage cart={cart} />} /> */}
+            {/* <Route path="orders" element={ <OrdersPage cart={cart} />} />  */}
 
+            <Route path="/history" element={<OrderHistory />} />
             <Route path="/admin" element={<AddProduct />} />
           </Routes>
         </div>

@@ -23,7 +23,7 @@ const HomePage = ({ addToCart }) => {
       setError(null);
 
       // We start the timer and the API call at the same time
-    const timer = new Promise((resolve) => setTimeout(resolve, 3000));
+    const timer = new Promise((resolve) => setTimeout(resolve, 1000));
 
       try {
         // const res = await axios.get(`${API_BASE_URL}/get_products.php`);
