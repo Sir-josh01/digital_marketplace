@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
+import {Link} from 'react-router'
 
 import './OrderHistory.css'
 
@@ -50,6 +51,9 @@ const OrderHistory = () => {
               <div className="order-footer">
                 <strong>Total: ${Number(order.total_amount).toFixed(2)}</strong>
                 <span className="status-pill">{order.status}</span>
+                <Link to={`/track/${order.id}`} className="track-button">
+                Track Order
+                </Link>
               </div>
             </div>
           ))}

@@ -15,8 +15,11 @@ try {
     $pdo->beginTransaction();
 
     // 3. Create the main Order
-    $stmt = $pdo->prepare("INSERT INTO orders (total_amount) VALUES (?)");
-    $stmt->execute([$data['total']]);
+    $stmt = $pdo->prepare("INSERT INTO orders (total_amount, status) VALUES (?, ?)");
+    $stmt->execute([
+      $data['total'],
+      'Confirmed'
+      ]);
     $orderId = $pdo->lastInsertId();
 
     // 4. Create the Items (Linked by the Foreign Key)

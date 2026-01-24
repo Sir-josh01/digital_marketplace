@@ -7,6 +7,7 @@ import HomePage from "./pages/home/HomePage";
 import CheckOutPage from "./pages/checkout/CheckOutPage";
 import ProductDetails from "./pages/home/ProductDetails";
 import AddProduct from "./pages/admin/AddProduct";
+import OrderTracking from "./pages/orders/OrderTracking";
 
 // for components
 import Navbar from "./components/layout/Navbar";
@@ -203,6 +204,7 @@ function App() {
             {/* <Route path="orders" element={ <OrdersPage cart={cart} />} />  */}
 
             <Route path="/history" element={<OrderHistory />} />
+            <Route path="/track/:id" element={<OrderTracking />} />
             <Route path="/admin" element={<AddProduct />} />
           </Routes>
         </div>
