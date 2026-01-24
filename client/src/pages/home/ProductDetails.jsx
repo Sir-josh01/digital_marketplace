@@ -1,9 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import { API_BASE_URL } from "../config";
+import { API_BASE_URL } from "../../config";
 import axios from "axios";
-import SafeImage from "../components/SafeImage";
+import SafeImage from "../../components/UI/SafeImage";
 import "./ProductDetails.css";
 
 const ProductDetails = ({ addToCart }) => {

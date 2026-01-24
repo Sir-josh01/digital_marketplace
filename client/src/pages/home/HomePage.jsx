@@ -1,39 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Hero from "./Hero";
+// for pages
 import CategoryFilter from "./CategoryFilter";
-import ProductCard from "./ProductCard";
-import ProductSkeleton from "./ProductSkeleton";
-// import { ProductImage } from "./ProductImage";
-import { API_BASE_URL } from "../config";
 
+// for components
+import Hero from "../../components/layout/Hero";
+import ProductCard from "./ProductCard";
+import ProductSkeleton from "../../components/UI/ProductSkeleton";
+
+import { API_BASE_URL } from "../../config";
 import "./HomePage.css";
 
-const HomePage = ({
-  addToCart,
-  searchTerm,
-  setSearchTerm,
-  activeCategory,
-  setActiveCategory,
-  handleClearFilters,
-}) => {
+const HomePage = ({ addToCart }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // const isFiltered = searchTerm !== "" || activeCategory !== "All";
-
-  // COMBINED FILTER LOGIC :FOR SEARCH AND MATCHED PRODUCTS
-  // const filteredProducts = React.useMemo(() => {
-  //   return products.filter((product) => {
-  //     const matchesSearch = product.title
-  //       .toLowerCase()
-  //       .includes(searchTerm.toLowerCase());
-  //     const matchesCategory =
-  //       activeCategory === "All" || product.category === activeCategory;
-  //     return matchesSearch && matchesCategory;
-  //   });
-  // }, [searchTerm, activeCategory, products]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
 
   const fetchProducts = async () => {
       setLoading(true);
@@ -61,6 +44,13 @@ const HomePage = ({
       }
     };
 
+    const handleClearFilters = () => {
+      setSearchTerm("");
+      setActiveCategory("All");
+      const searchInput = document.querySelector(".main-search-bar");
+      if (searchInput) searchInput.value = "";
+  };
+
   useEffect(() => {
     // setTimeout(() => {
     //   fetchProducts();
@@ -69,10 +59,10 @@ const HomePage = ({
   }, []);
 
     const filteredProducts = React.useMemo(() => {
-    return products.filter((product) => {
-      const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = activeCategory === "All" || product.category === activeCategory;
-      return matchesSearch && matchesCategory;
+      return products.filter((product) => {
+        const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = activeCategory === "All" || product.category === activeCategory;
+        return matchesSearch && matchesCategory;
     });
   }, [searchTerm, activeCategory, products]);
 
@@ -138,7 +128,6 @@ const HomePage = ({
               </div>
             )}
           </div>
-        {/* )} */}
       </main>
     </>
   );

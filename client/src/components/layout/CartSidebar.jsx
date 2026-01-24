@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import SafeImage from "./SafeImage";
+import SafeImage from "../UI/SafeImage";
 import "./CartSidebar.css";
 
 const CartSidebar = ({

@@ -1,24 +1,27 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Routes, Route, useNavigate } from "react-router";
-import Navbar from "./components/Navbar";
-import HomePage from "./components/HomePage";
-import ProductDetails from "./pages/ProductDetails";
-import CartSidebar from "./components/CartSidebar";
-import "./App.css";
-import { CheckOutPage } from "./pages/CheckoutPage";
-import { OrdersPage } from "./pages/orders/OrdersPage";
+
+// For pages
+import HomePage from "./pages/home/HomePage";
+import CheckOutPage from "./pages/checkout/CheckOutPage";
+import ProductDetails from "./pages/home/ProductDetails";
+import AddProduct from "./pages/admin/AddProduct";
+
+// for components
+import Navbar from "./components/layout/Navbar";
+import CartSidebar from "./components/layout/CartSidebar";
+import Toast from "./components/UI/Toast";
+
+// General styles and config
 import { API_BASE_URL } from "./config";
-import AddProduct from "./pages/AddProduct";
-import Toast from "./components/Toast";
+import "./App.css";
 
 function App() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [toast, setToast] = useState({ show: false, message: "" });
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
 
   const [view, setView] = useState("shop") //shop, success, checkout
   const navigate = useNavigate();
@@ -99,15 +102,6 @@ function App() {
     }
   };
 
-  const handleClearFilters = () => {
-    setSearchTerm("");
-    setActiveCategory("All");
-    // This clears the physical text in the input box
-    const searchInput = document.querySelector(".main-search-bar");
-    if (searchInput) searchInput.value = "";
-  };
-
-  // The showToast function
   const showToast = (msg) => {
     setToast({ show: true, message: msg });
     // Auto-hide after 3 seconds
@@ -176,17 +170,14 @@ function App() {
                 <HomePage
                   products={products}
                   addToCart={addToCart}
-                  handleClearFilters={handleClearFilters}
-                  searchTerm={searchTerm}
-                  activeCategory={activeCategory}
-                  setActiveCategory={setActiveCategory}
                 />
               }
             />
             <Route
               path="/product/:id"
               element={
-                <ProductDetails products={products} addToCart={addToCart} />
+                <ProductDetails 
+                  addToCart={addToCart} />
               }
             />
             <Route 
@@ -195,11 +186,11 @@ function App() {
                 <CheckOutPage 
                   cart={cart}
                   completePurchase={completePurchase} 
-                  
                   />
               } 
             />
             {/* <Route path="orders" element={ <OrdersPage cart={cart} />} /> */}
+
             <Route path="/admin" element={<AddProduct />} />
           </Routes>
         </div>

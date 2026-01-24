@@ -3,9 +3,9 @@ import React from 'react'
 const ProductSkeleton = () => {
   return (
    <div className="skeleton-card">
-    <div className="skeleton-image pulse"></div>
-    <div className="skeleton-text pulse"></div>
-    <div className="skeleton-price pulse"></div>
+   <div className="shimmer sk-img"></div>
+      <div className="shimmer sk-title"></div>
+      <div className="shimmer sk-text"></div>
   </div>
   )
 }

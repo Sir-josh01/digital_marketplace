@@ -1,7 +1,7 @@
 import React from 'react';
 import './CheckOutPage.css';
 
-export const CheckOutPage = ({ cart }) => {
+const CheckOutPage = ({ cart }) => {
   // Calculate total price
   const total = cart.reduce((acc, item) => acc + item.price, 0);
 
@@ -52,3 +52,5 @@ export const CheckOutPage = ({ cart }) => {
     </div>
   );
 };
+
+export default CheckOutPage;
