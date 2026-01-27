@@ -48,10 +48,11 @@ const Navbar = ({ cart, onCartClick }) => {
             <Link to="/history" className="history-link">My Orders</Link>
           </li>
           <li>
-            <Link to="/admin" className="admin-link">
+            <Link to="/add-products" className="admin-link">
             Add Product
           </Link>
           </li>
+          <li><Link to="/admin" className="admin-nav-link">Admin Panel</Link></li>
           
 
           <li className="nav-cart">

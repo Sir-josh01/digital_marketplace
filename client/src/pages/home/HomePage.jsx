@@ -59,6 +59,8 @@ const HomePage = ({ addToCart }) => {
   }, []);
 
     const filteredProducts = React.useMemo(() => {
+      if (!Array.isArray(products)) return [];
+      
       return products.filter((product) => {
         const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = activeCategory === "All" || product.category === activeCategory;

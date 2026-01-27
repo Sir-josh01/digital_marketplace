@@ -8,6 +8,7 @@ import CheckOutPage from "./pages/checkout/CheckOutPage";
 import ProductDetails from "./pages/home/ProductDetails";
 import AddProduct from "./pages/admin/AddProduct";
 import OrderTracking from "./pages/orders/OrderTracking";
+import AdminDashboard from "./Admin/AdminDashboard";
 
 // for components
 import Navbar from "./components/layout/Navbar";
@@ -18,6 +19,7 @@ import OrderHistory from "./pages/orders/OrderHistory";
 // General styles and config
 import { API_BASE_URL } from "./config";
 import "./App.css";
+
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -33,11 +35,18 @@ function App() {
     try {
       const res = await axios.get(`${API_BASE_URL}/get_cart.php`);
 
-      setCart(res.data);
-      console.log("cart is loading...");
-    } catch (err) {
-      console.log("Cart fetch failed at the loadCart", err);
+      if (res.data && res.data.success) {
+      setProducts(res.data.products);
+    } else {
+      console.warn("API returned success:false or malformed data");
+      setProducts([]); // Fallback to empty array if success is false
     }
+     
+   } catch (err) {
+    console.error("Product fetch failed", err);
+    setProducts([]); // Fallback to empty array on network error
+  }
+
   };
 
   const addToCart = async (productId) => {
@@ -205,7 +214,9 @@ function App() {
 
             <Route path="/history" element={<OrderHistory />} />
             <Route path="/track/:id" element={<OrderTracking />} />
-            <Route path="/admin" element={<AddProduct />} />
+            <Route path="/add-products" element={<AddProduct />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            
           </Routes>
         </div>
       </div>

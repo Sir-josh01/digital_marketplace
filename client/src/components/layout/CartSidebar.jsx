@@ -59,7 +59,7 @@ const CartSidebar = ({
             </button>
           </>
         ) : (
-          cart.map((item) => (
+          Array.isArray(cart) ? cart : [].map((item) => (
             <div key={item.cart_id} className="cart-item">
               <SafeImage
                 src={item.image}
