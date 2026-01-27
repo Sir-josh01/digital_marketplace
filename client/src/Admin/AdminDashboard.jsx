@@ -65,21 +65,25 @@ const AdminDashboard = () => {
   return (
     <div className="admin-container">
       <h2>Admin: Order Management</h2>
+      <div className='table-responsive'>
       <table className="admin-table">
         <thead>
           <tr>
             <th>Order ID</th>
+            <th>Items</th>
             <th>Customer Total</th>
             <th>Current Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {orders.map(order => (
+          {orders.length > 0 ? (
+           orders.map(order => (
             <tr key={order.id}>
               <td>#{order.id}</td>
+              <td>{order.product_summary || "No items"}</td>
               <td>${order.total_amount}</td>
-              <td><span className={`status-${(order.status ||'pending').toLowerCase()}`}>{order.status ? order.status : "Pending"}</span></td>
+              <td><span className={`status-${(order.status ||'pending').toLowerCase()}`}>{order.status || "Pending"}</span></td>
               <td>
                 <select 
                   value={order.status} 
@@ -100,9 +104,17 @@ const AdminDashboard = () => {
                 </button>
               </td>
             </tr>
-          ))}
+          ))
+        ) : (
+          <tr>
+      <td colSpan="4" style={{ textAlign: 'center', padding: '30px' }}>
+        No orders found in the database.
+      </td>
+    </tr>
+        )}
         </tbody>
       </table>
+      </div>
     </div>
   );
 };

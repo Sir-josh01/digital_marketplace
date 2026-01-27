@@ -12,7 +12,10 @@ try {
     foreach ($orders as $order) {
         $itemStmt = $pdo->prepare("SELECT product_title, price FROM order_items WHERE order_id = ?");
         $itemStmt->execute([$order['id']]);
-        $items = $itemStmt->fetchAll();
+        $items = $itemStmt->fetchAll(PDO::FETCH_COLUMN);
+
+        // Create the "Product Summary" by joining the titles with a comma
+        $order['product_summary'] = !empty($items) ? implode(", ", $items) : "No items";
 
         // Combine order info with its items
         $order['items'] = $items;

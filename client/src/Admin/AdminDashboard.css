@@ -1,14 +1,32 @@
+/* Light mode override if needed */
+[data-theme="light"] .delete-btn {
+  border-color: #d32f2f;
+  color: #d32f2f;
+}
+
 .admin-container {
   padding: 40px;
   max-width: 1000px;
   margin: auto;
+  color: var(--text-main); /*added*/
 }
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto; /* Adds a horizontal scrollbar ONLY on small screens */
+  -webkit-overflow-scrolling: touch;
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
   background: var(--bg-card);
-  border-radius: 8px;
+  /* border-radius: 8px; */
   overflow: hidden;
+
+  border-radius: 12px; /*added*/
+  overflow: hidden; /*added*/
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /*added*/
 }
 .admin-table th,
 .admin-table td {
@@ -16,47 +34,116 @@
   text-align: left;
   border-bottom: 1px solid #eee;
 }
+
+.admin-table td:nth-child(2) {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds "..." if the product list is too long */
+}
+
 .admin-table th {
-  background: #f8f9fa;
-  color: #333;
+  /* background: #f8f9fa;
+  color: #333; */
+
+  background: var(--bg-body); /* Slightly different from card for contrast */
+  color: var(--text-main);
+  padding: 15px;
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+/* added */
+.admin-table td {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color); /* Use a variable here! */
+  color: var(--text-main);
+}
+
+/* Make the dropdown look better in both modes -> Added */
+.admin-table select {
+  background: var(--bg-body);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+
+  /* padding: 5px;
+  border-radius: 4px;
+  outline: none; */
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  appearance: none; /* Removes default browser arrow if you want to custom style it */
+  -webkit-appearance: none;
+}
+
+/* Fix for the dropdown options specifically */
+.admin-table select option {
+  background-color: var(--bg-card);
+  color: var(--text-main);
 }
 
 /* Status Colors */
-.status-confirmed {
+/* .status-confirmed {
   color: #2196f3;
   font-weight: bold;
-}
-.status-delivered {
+} */
+/* .status-delivered {
   color: #4caf50;
   font-weight: bold;
-}
+} */
 
 /* status colors */
-.status-confirmed {
+/* .status-confirmed {
   color: #2196f3;
   background: #e3f2fd;
   padding: 4px 8px;
   border-radius: 4px;
-}
-.status-processing {
+} */
+/* .status-processing {
   color: #ff9800;
   background: #fff3e0;
   padding: 4px 8px;
   border-radius: 4px;
-}
-.status-shipped {
+} */
+/* .status-shipped {
   color: #9c27b0;
   background: #f3e5f5;
   padding: 4px 8px;
   border-radius: 4px;
-}
-.status-delivered {
+} */
+/* .status-delivered {
   color: #4caf50;
   background: #e8f5e9;
   padding: 4px 8px;
   border-radius: 4px;
-}
+} */
 
+.status-confirmed {
+  color: #2196f3;
+  background: rgba(33, 150, 243, 0.1);
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+.status-processing {
+  color: #ff9800;
+  background: rgba(255, 152, 0, 0.1);
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+.status-shipped {
+  color: #9c27b0;
+  background: rgba(156, 39, 176, 0.1);
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+.status-delivered {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+  padding: 5px 10px;
+  border-radius: 20px;
+}
 
 .delete-btn {
   background: none;
@@ -76,8 +163,13 @@
   box-shadow: 0 0 10px rgba(255, 77, 77, 0.3);
 }
 
-/* Light mode override if needed */
-[data-theme='light'] .delete-btn {
-  border-color: #d32f2f;
-  color: #d32f2f;
+
+@media (max-width: 600px) {
+  .admin-container {
+    padding: 15px; /* Less padding on mobile */
+  }
+  .admin-table th, .admin-table td {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
 }

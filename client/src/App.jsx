@@ -6,7 +6,7 @@ import { Routes, Route, useNavigate } from "react-router";
 import HomePage from "./pages/home/HomePage";
 import CheckOutPage from "./pages/checkout/CheckOutPage";
 import ProductDetails from "./pages/home/ProductDetails";
-import AddProduct from "./pages/admin/AddProduct";
+import AddProduct from "./Admin/AddProduct";
 import OrderTracking from "./pages/orders/OrderTracking";
 import AdminDashboard from "./Admin/AdminDashboard";
 
