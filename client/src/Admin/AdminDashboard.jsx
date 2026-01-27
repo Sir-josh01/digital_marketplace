@@ -6,6 +6,9 @@ import './AdminDashboard.css';
 const AdminDashboard = () => {
   const [orders, setOrders] = useState([]);
 
+// Dashboard summary
+  const totalSales = orders.reduce((sum, order) => sum + parseFloat(order.total_amount || 0), 0);
+  const totalOrders = orders.length;
 
   const fetchOrders = async () => {
     const res = await axios.get(`${API_BASE_URL}/get_orders.php`);
@@ -45,23 +48,41 @@ const AdminDashboard = () => {
   }
 };
 
-  const totalSales = orders.reduce((sum, order) => sum + parseFloat(order.total_amount || 0), 0);
-  const totalOrders = orders.length;
+const downloadReport = () => {
+  // 1. Define Headers
+  const headers = ["Order ID", "Items", "Total Amount", "Status", "Date"];
+  
+  // 2. Map orders to rows
+  const rows = orders.map(order => [
+    `#${order.id}`,
+    `"${order.product_summary}"`, // Quotes handle commas inside the item names
+    order.total_amount,
+    order.status || "Pending",
+    order.created_at
+  ]);
+
+  // 3. Combine into a single string
+  const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+
+  // 4. Create a download link
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `Sales_Report_${new Date().toLocaleDateString()}.csv`);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 
   return (
     <div className="admin-container">
-      <h2>Admin: Order Management</h2>
-
-      {/* Summary Cards */}
-      <div className="admin-stats">
-        <div className="stat-card">
-          <span>Total Sales</span>
-          <h3>${totalSales.toFixed(2)}</h3>
-        </div>
-        <div className="stat-card">
-          <span>Total Orders</span>
-          <h3>{totalOrders}</h3>
-        </div>
+      <div className='admin-header'>
+        <h2>Admin: Order Management</h2>
+      <button onClick={downloadReport} className="download-btn">
+    📥 Download Report
+  </button>
       </div>
 
       <div className='table-responsive'>
@@ -114,6 +135,19 @@ const AdminDashboard = () => {
         </tbody>
       </table>
       </div>
+
+      {/* Summary Cards */}
+      <div className="admin-stats">
+        <div className="stat-card">
+          <span>Total Sales</span>
+          <h3>${totalSales.toFixed(2)}</h3>
+        </div>
+        <div className="stat-card">
+          <span>Total Orders</span>
+          <h3>{totalOrders}</h3>
+        </div>
+      </div>
+
     </div>
   );
 };
