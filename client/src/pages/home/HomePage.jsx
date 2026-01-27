@@ -33,7 +33,6 @@ const HomePage = ({ products, loading, error, fetchProducts,addToCart }) => {
       if (!Array.isArray(products)) return [];
       // DEBUG LOG
       // console.log("Filtering products:", products);
-
       return products.filter((product) => {
         const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = activeCategory === "All" || product.category === activeCategory;

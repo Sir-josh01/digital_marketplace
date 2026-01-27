@@ -20,7 +20,6 @@ import OrderHistory from "./pages/orders/OrderHistory";
 import { API_BASE_URL } from "./config";
 import "./App.css";
 
-
 function App() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
@@ -30,7 +29,6 @@ function App() {
    // const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [view, setView] = useState("shop") //shop, success, checkout
   const navigate = useNavigate();
 
@@ -44,12 +42,11 @@ function App() {
       } else {
         setCart([]); // Fallback 
         console.error("Server Error:", res.data.error);
-      }
-     
-   } catch (err) {
-    setCart([]); // Network failure fallback
-    console.error("Connection Error:", err);
-  }
+      }   
+     } catch (err) {
+      setCart([]); // Network failure fallback
+      console.error("Connection Error:", err);
+    }
 
   };
 
@@ -64,8 +61,7 @@ function App() {
         timer    
       ]);
       // ADD THIS TEMPORARY LOG:
-        console.log("SERVER DATA:", res.data);
-
+        // console.log("SERVER DATA:", res.data);
         if (res.data && res.data.success) {
           setProducts(res.data.products); 
           console.log("fetched products successfully");

@@ -7,23 +7,6 @@ const AdminDashboard = () => {
   const [orders, setOrders] = useState([]);
 
 
-//   const handleStatusChange = async (orderId, newStatus) => {
-//   try {
-//     const res = await axios.post(`${API_BASE_URL}/update_order_status.php`, {
-//       order_id: orderId,
-//       status: newStatus
-//     });
-
-//     if (res.data.success) {
-//       alert("Status updated successfully!");
-//       // Refresh the orders list to see the change
-//       fetchOrders(); 
-//     }
-//   } catch (err) {
-//     alert("Failed to update status");
-//   }
-// };
-
   const fetchOrders = async () => {
     const res = await axios.get(`${API_BASE_URL}/get_orders.php`);
     if (res.data.success) setOrders(res.data.orders);
@@ -43,7 +26,7 @@ const AdminDashboard = () => {
         alert("Server error: " + res.data.error);
       } 
     } catch (err) {
-      alert("Network error: Could not update status");
+      alert("Network error: Could not update status", err);
     }
   };
 
@@ -62,9 +45,25 @@ const AdminDashboard = () => {
   }
 };
 
+  const totalSales = orders.reduce((sum, order) => sum + parseFloat(order.total_amount || 0), 0);
+  const totalOrders = orders.length;
+
   return (
     <div className="admin-container">
       <h2>Admin: Order Management</h2>
+
+      {/* Summary Cards */}
+      <div className="admin-stats">
+        <div className="stat-card">
+          <span>Total Sales</span>
+          <h3>${totalSales.toFixed(2)}</h3>
+        </div>
+        <div className="stat-card">
+          <span>Total Orders</span>
+          <h3>{totalOrders}</h3>
+        </div>
+      </div>
+
       <div className='table-responsive'>
       <table className="admin-table">
         <thead>
@@ -83,7 +82,7 @@ const AdminDashboard = () => {
               <td>#{order.id}</td>
               <td>{order.product_summary || "No items"}</td>
               <td>${order.total_amount}</td>
-              <td><span className={`status-${(order.status ||'pending').toLowerCase()}`}>{order.status || "Pending"}</span></td>
+              <td><span className={`status-${(order.status ||'Pending').toLowerCase()}`}>{order.status || "Pending"}</span></td>
               <td>
                 <select 
                   value={order.status} 
@@ -107,7 +106,7 @@ const AdminDashboard = () => {
           ))
         ) : (
           <tr>
-      <td colSpan="4" style={{ textAlign: 'center', padding: '30px' }}>
+      <td colSpan="5" style={{ textAlign: 'center', padding: '30px' }}>
         No orders found in the database.
       </td>
     </tr>
