@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+// import axios from "axios";
 // for pages
 import CategoryFilter from "./CategoryFilter";
 
@@ -8,43 +8,12 @@ import Hero from "../../components/layout/Hero";
 import ProductCard from "./ProductCard";
 import ProductSkeleton from "../../components/UI/ProductSkeleton";
 
-import { API_BASE_URL } from "../../config";
+// import { API_BASE_URL } from "../../config";
 import "./HomePage.css";
 
-const HomePage = ({ addToCart }) => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const HomePage = ({ products, loading, error, fetchProducts,addToCart }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    setError(null);
-
-    const timer = new Promise((resolve) => setTimeout(resolve, 1000));
-
-      try {
-        // const res = await axios.get(`${API_BASE_URL}/get_products.php`);
-        const [res] = await Promise.all([
-        axios.get(`${API_BASE_URL}/get_products.php`),
-        timer 
-      ]);
-        if (res.data && res.data.success) {
-          setProducts(res.data.success) 
-          console.log("fetched products successfully");
-        } else {
-          throw new Error(res.data.error || "Malformed data");
-        }
-       
-        setLoading(false);
-      } catch (err) {
-        console.log("Error fetching products", err);
-        await timer;
-        setError("Server is currently unreachable. Please try again later.");
-        setLoading(false);
-      }
-    };
 
     const handleClearFilters = () => {
       setSearchTerm("");
@@ -53,22 +22,27 @@ const HomePage = ({ addToCart }) => {
       if (searchInput) searchInput.value = "";
   };
 
-  useEffect(() => {
-    // setTimeout(() => {
-    //   fetchProducts();
-    // }, 3000);
-    fetchProducts();
-  }, []);
+  // useEffect(() => {
+  //   // setTimeout(() => {
+  //   //   fetchProducts();
+  //   // }, 3000);
+  //   fetchProducts();
+  // }, []);
 
     const filteredProducts = React.useMemo(() => {
       if (!Array.isArray(products)) return [];
-      
+      // DEBUG LOG
+      // console.log("Filtering products:", products);
+
       return products.filter((product) => {
         const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = activeCategory === "All" || product.category === activeCategory;
         return matchesSearch && matchesCategory;
     });
   }, [searchTerm, activeCategory, products]);
+
+  if (loading) return <div className="loader">Loading assets...</div>;
+  if (error) return <div className="error-msg">{error}</div>;
 
   return (
     <>

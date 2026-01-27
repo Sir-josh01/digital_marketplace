@@ -27,6 +27,10 @@ function App() {
   const [cartOpen, setCartOpen] = useState(false);
   const [toast, setToast] = useState({ show: false, message: "" });
 
+   // const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const [view, setView] = useState("shop") //shop, success, checkout
   const navigate = useNavigate();
 
@@ -48,6 +52,36 @@ function App() {
   }
 
   };
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    setError(null);
+    const timer = new Promise((resolve) => setTimeout(resolve, 1000));
+
+      try {
+        const [res] = await Promise.all([
+        axios.get(`${API_BASE_URL}/get_products.php`),
+        timer    
+      ]);
+      // ADD THIS TEMPORARY LOG:
+        console.log("SERVER DATA:", res.data);
+
+        if (res.data && res.data.success) {
+          setProducts(res.data.products); 
+          console.log("fetched products successfully");
+        } else {
+          throw new Error(res.data.error || "Malformed data");
+        }   
+        setLoading(false);
+      } catch (err) {
+        console.log("Error fetching products", err);
+        await timer;
+        setProducts([]);
+        setError("Server is currently unreachable. Please try again later.");  
+      } finally {
+        setLoading(false);
+      }
+    };
 
   const addToCart = async (productId) => {
     try {
@@ -144,6 +178,10 @@ function App() {
   };
 
   useEffect(() => {
+  fetchProducts();
+}, []);
+
+  useEffect(() => {
   localStorage.setItem('cart', JSON.stringify(cart));
 }, [cart]);
 
@@ -189,7 +227,11 @@ function App() {
               element={
                 <HomePage
                   products={products}
+                  loading={loading}
+                  error={error}
+                  fetchProducts={fetchProducts}
                   addToCart={addToCart}
+
                 />
               }
             />
