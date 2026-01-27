@@ -36,11 +36,11 @@ function App() {
       const res = await axios.get(`${API_BASE_URL}/get_cart.php`);
 
       if (res.data.success && Array.isArray(res.data.data)) {
-        setCart(res.data.data);
-    } else {
-      setCart([]); // Fallback 
-      console.error("Server Error:", res.data.error);
-    }
+        setCart(res.data.cart);
+      } else {
+        setCart([]); // Fallback 
+        console.error("Server Error:", res.data.error);
+      }
      
    } catch (err) {
     setCart([]); // Network failure fallback

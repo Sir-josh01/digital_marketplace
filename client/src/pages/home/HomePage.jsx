@@ -19,25 +19,27 @@ const HomePage = ({ addToCart }) => {
   const [activeCategory, setActiveCategory] = useState("All");
 
   const fetchProducts = async () => {
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    setError(null);
 
-      // We start the timer and the API call at the same time
     const timer = new Promise((resolve) => setTimeout(resolve, 1000));
 
       try {
         // const res = await axios.get(`${API_BASE_URL}/get_products.php`);
         const [res] = await Promise.all([
         axios.get(`${API_BASE_URL}/get_products.php`),
-        timer // This ensures the loader stays for at least 3 seconds
+        timer 
       ]);
-
-        setProducts(res.data);
-        console.log("fetched products successfully");
+        if (res.data && res.data.success) {
+          setProducts(res.data.success) 
+          console.log("fetched products successfully");
+        } else {
+          throw new Error(res.data.error || "Malformed data");
+        }
+       
         setLoading(false);
       } catch (err) {
         console.log("Error fetching products", err);
-        // Even if it fails, wait for the timer so the transition isn't jarring
         await timer;
         setError("Server is currently unreachable. Please try again later.");
         setLoading(false);
