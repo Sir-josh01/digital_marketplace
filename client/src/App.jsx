@@ -35,16 +35,16 @@ function App() {
     try {
       const res = await axios.get(`${API_BASE_URL}/get_cart.php`);
 
-      if (res.data && res.data.success) {
-      setProducts(res.data.products);
+      if (res.data.success && Array.isArray(res.data.data)) {
+        setCart(res.data.data);
     } else {
-      console.warn("API returned success:false or malformed data");
-      setProducts([]); // Fallback to empty array if success is false
+      setCart([]); // Fallback 
+      console.error("Server Error:", res.data.error);
     }
      
    } catch (err) {
-    console.error("Product fetch failed", err);
-    setProducts([]); // Fallback to empty array on network error
+    setCart([]); // Network failure fallback
+    console.error("Connection Error:", err);
   }
 
   };
