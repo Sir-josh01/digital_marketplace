@@ -109,20 +109,20 @@
 
 @media (max-width: 768px) {
   .navbar {
-    flex-wrap: wrap; /* Allows items to move to a new line */
+    flex-wrap: wrap; 
     padding: 2rem 3%;
     margin:0 10px;
   }
 
   .nav-search {
-    order: 3; /* Moves search to the bottom row */
+    order: 3; 
     width: 100%;
     margin-top: 15px;
     margin-left: 10px;
   }
 
   .nav-search input {
-    width: 90%; /* Search takes full width on mobile */
+    width: 90%; 
   }
 
   .nav-links {

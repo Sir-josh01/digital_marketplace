@@ -3,10 +3,8 @@ import axios from 'axios';
 import { API_BASE_URL } from '../config';
 import './AdminDashboard.css';
 
-const AdminDashboard = () => {
-  const [orders, setOrders] = useState([]);
+const AdminDashboard = ({logout, orders, fetchOrders}) => {
   const [adminSearch, setAdminSearch] = useState("");
-
   const filteredOrders = React.useMemo(() => {
   return orders.filter(order => 
     order.id.toString().includes(adminSearch) || 
@@ -18,11 +16,6 @@ const AdminDashboard = () => {
 // Dashboard summary
   const totalSales = filteredOrders.reduce((sum, order) => sum + parseFloat(order.total_amount || 0), 0);
   const totalOrders = filteredOrders.length;
-
-  const fetchOrders = async () => {
-    const res = await axios.get(`${API_BASE_URL}/get_orders.php`);
-    if (res.data.success) setOrders(res.data.orders);
-  };
 
   useEffect(() => { fetchOrders(); }, []);
 
@@ -89,6 +82,7 @@ const downloadReport = () => {
     <div className="admin-container">
       <div className='admin-header'>
         <h2>Admin: Order Management</h2>
+        
         <div className='admin-controls'>
           <input 
           type="text" 
@@ -101,6 +95,7 @@ const downloadReport = () => {
       <button onClick={downloadReport} className="download-btn">
         📥 Download Report
       </button>
+      <button onClick={logout} className="logout-link">Logout</button>
       </div>
 
       <div className='table-responsive'>

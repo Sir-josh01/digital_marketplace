@@ -15,23 +15,36 @@ import Navbar from "./components/layout/Navbar";
 import CartSidebar from "./components/layout/CartSidebar";
 import Toast from "./components/UI/Toast";
 import OrderHistory from "./pages/orders/OrderHistory";
+import ProtectedRoute from "./components/UI/ProtectedRoute";
+import AdminLogin from "./Admin/AdminLogin";
 
 // General styles and config
 import { API_BASE_URL } from "./config";
 import "./App.css";
 
 function App() {
+  const [isAdmin, setIsAdmin] = useState(localStorage.getItem('adminToken') === 'true');
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [toast, setToast] = useState({ show: false, message: "" });
 
-   // const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [view, setView] = useState("shop") //shop, success, checkout
   const navigate = useNavigate();
 
+
+  const login = () => {
+    setIsAdmin(true);
+    localStorage.setItem('adminToken', 'true');
+  };
+
+  const logout = () => {
+    setIsAdmin(false);
+    localStorage.removeItem('adminToken');
+};
 
   const loadCart = async () => {
     try {
@@ -78,6 +91,11 @@ function App() {
         setLoading(false);
       }
     };
+
+  const fetchOrders = async () => {
+    const res = await axios.get(`${API_BASE_URL}/get_orders.php`);
+    if (res.data.success) setOrders(res.data.orders);
+  };
 
   const addToCart = async (productId) => {
     try {
@@ -231,6 +249,21 @@ function App() {
                 />
               }
             />
+
+            <Route 
+              path="/admin-login" 
+              element={<AdminLogin onLogin={login} />} 
+            />
+
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute isAdmin={isAdmin}>
+                  <AdminDashboard logout={logout} orders={orders} fetchOrders={fetchOrders} />
+                </ProtectedRoute>
+              } 
+            />
+
             <Route
               path="/product/:id"
               element={
@@ -253,7 +286,6 @@ function App() {
             <Route path="/history" element={<OrderHistory />} />
             <Route path="/track/:id" element={<OrderTracking />} />
             <Route path="/add-products" element={<AddProduct />} />
-            <Route path="/admin" element={<AdminDashboard />} />
             
           </Routes>
         </div>
