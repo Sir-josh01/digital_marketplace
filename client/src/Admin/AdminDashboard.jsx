@@ -5,10 +5,19 @@ import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const [orders, setOrders] = useState([]);
+  const [adminSearch, setAdminSearch] = useState("");
+
+  const filteredOrders = React.useMemo(() => {
+  return orders.filter(order => 
+    order.id.toString().includes(adminSearch) || 
+    (order.product_summary && order.product_summary.toLowerCase().includes(adminSearch.toLowerCase()))
+  );
+}, [adminSearch, orders]);
+
 
 // Dashboard summary
-  const totalSales = orders.reduce((sum, order) => sum + parseFloat(order.total_amount || 0), 0);
-  const totalOrders = orders.length;
+  const totalSales = filteredOrders.reduce((sum, order) => sum + parseFloat(order.total_amount || 0), 0);
+  const totalOrders = filteredOrders.length;
 
   const fetchOrders = async () => {
     const res = await axios.get(`${API_BASE_URL}/get_orders.php`);
@@ -80,9 +89,18 @@ const downloadReport = () => {
     <div className="admin-container">
       <div className='admin-header'>
         <h2>Admin: Order Management</h2>
+        <div className='admin-controls'>
+          <input 
+          type="text" 
+          placeholder="Search by ID or Product..." 
+          className="admin-search-input"
+          value={adminSearch}
+          onChange={(e) => setAdminSearch(e.target.value)}
+        />
+        </div>
       <button onClick={downloadReport} className="download-btn">
-    📥 Download Report
-  </button>
+        📥 Download Report
+      </button>
       </div>
 
       <div className='table-responsive'>
@@ -97,8 +115,8 @@ const downloadReport = () => {
           </tr>
         </thead>
         <tbody>
-          {orders.length > 0 ? (
-           orders.map(order => (
+          {filteredOrders.length > 0 ? (
+           filteredOrders.map(order => (
             <tr key={order.id}>
               <td>#{order.id}</td>
               <td>{order.product_summary || "No items"}</td>
