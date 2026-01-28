@@ -35,6 +35,11 @@ function App() {
   const [view, setView] = useState("shop") //shop, success, checkout
   const navigate = useNavigate();
 
+  const adminConfig = {
+  headers: {
+    'X-API-KEY': import.meta.env.VITE_ADMIN_API_KEY 
+  }
+};
 
   const login = () => {
     setIsAdmin(true);
@@ -93,8 +98,15 @@ function App() {
     };
 
   const fetchOrders = async () => {
-    const res = await axios.get(`${API_BASE_URL}/get_orders.php`);
-    if (res.data.success) setOrders(res.data.orders);
+   try {
+    // Note: pointing to get_admin_orders.php now
+    const res = await axios.get(`${API_BASE_URL}/get_admin_orders.php`, adminConfig);
+    if (res.data.success) {
+      setOrders(res.data.orders);
+    }
+  } catch (err) {
+    console.error("Admin Access Denied:", err.response?.data?.error || err.message);
+  }
   };
 
   const addToCart = async (productId) => {
@@ -271,6 +283,7 @@ function App() {
                   addToCart={addToCart} />
               }
             />
+
             <Route 
               path="checkout" 
               element={

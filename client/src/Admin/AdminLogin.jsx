@@ -1,19 +1,24 @@
 import {useState, } from 'react';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const AdminLogin = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (password === "admin123") { // In production, use a real backend check
-      onLogin();
+    try {
+    const res = await axios.post(`${API_BASE_URL}/login.php`, { password });
+    if (res.data.success) {
+      onLogin(); // Sets isAdmin to true in App.jsx
       navigate("/admin");
-    } else {
-      alert("Invalid Credentials");
     }
-  };
+  } catch (err) {
+    alert("Unauthorized: Incorrect Password", err);
+  }
+};
 
   return (
     <div className="login-container">

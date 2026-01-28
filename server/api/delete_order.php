@@ -2,6 +2,16 @@
 <?php
 require_once 'api_init.php';
 
+// Check if the key is correct
+$headers = getallheaders();
+$providedKey = $headers['X-API-KEY'] ?? '';
+
+if ($providedKey !== ADMIN_API_KEY) {
+    http_response_code(403);
+    echo json_encode(["success" => false, "error" => "Access Denied: Invalid API Key"]);
+    exit;
+}
+
 $data = json_decode(file_get_contents('php://input'), true);
 
 if (!isset($data['order_id'])) {
