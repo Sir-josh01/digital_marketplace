@@ -1,5 +1,4 @@
 <?php
-// This brings in headers, CORS, and the $pdo connection
 require_once 'api_init.php'; 
 
 try {
@@ -7,22 +6,20 @@ try {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    if (!$data || !isset($data['cart'])) {
-        throw new Exception("Empty order data received.");
+    if (!$data || !isset($data['cart']) || !isset($data['user_id'])) {
+        throw new Exception("Incomplete order data. User ID and Cart required.");
     }
 
-    // 2. Start Database Transaction
     $pdo->beginTransaction();
 
-    // 3. Create the main Order
-    $stmt = $pdo->prepare("INSERT INTO orders (total_amount, status) VALUES (?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO orders (user_id, total_amount, status) VALUES (?, ?, ?)");
     $stmt->execute([
+      $data['user_id'],
       $data['total'],
       'Confirmed'
       ]);
     $orderId = $pdo->lastInsertId();
 
-    // 4. Create the Items (Linked by the Foreign Key)
     $itemStmt = $pdo->prepare("INSERT INTO order_items (order_id, product_title, price) VALUES (?, ?, ?)");
     
     foreach ($data['cart'] as $item) {
@@ -33,12 +30,13 @@ try {
         ]);
     }
 
-    // 5. Success!
+    $clearStmt = $pdo->prepare("DELETE FROM cart WHERE user_id = ?");
+    $clearStmt->execute([$data['user_id']]);
+
     $pdo->commit();
     echo json_encode(["success" => true, "order_id" => $orderId, "message" => "Order placed successfully!"]);
 
 } catch (Exception $e) {
-    // Rollback if any part fails
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }

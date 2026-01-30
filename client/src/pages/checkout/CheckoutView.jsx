@@ -15,7 +15,11 @@ const CheckOutView = ({ cart, total, handlePayment, isSubmitting }) => {
           {cart.length > 0 ? (
             cart.map((product) => (
               <div key={product.title} className="checkout-item">
-                <SafeImage />
+                <SafeImage 
+                  src={product.image}
+                  alt={product.title}
+                  className="checkout.thumb"                
+                />
                 <div className="item-info">
                   <h4>{product.title}</h4>
                   <p>Vendor: {product.vendor}</p>

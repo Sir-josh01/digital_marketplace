@@ -72,8 +72,13 @@ const handleUserLogout = () => {
 };
 
   const loadCart = async () => {
+    if (!user) {
+      setCart([]);
+      return;
+    }
+
     try {
-      const res = await axios.get(`${API_BASE_URL}/get_cart.php`);
+      const res = await axios.get(`${API_BASE_URL}/get_cart.php?user_id=${user.id}`);
 
       if (res.data.success && Array.isArray(res.data.data)) {
         setCart(res.data.data);
@@ -130,22 +135,22 @@ const handleUserLogout = () => {
   };
 
   const addToCart = async (productId) => {
+    if (!user) return showToast("Please login to add items");
     try {
       const response = await axios.post(`${API_BASE_URL}/add_to_cart.php`, {
         product_id: productId,
+        user_id: user.id
       });
 
       if (response.data.success) {
         console.log("product added!");
-        
         showToast(response.data.message);
         await loadCart();
         // setCartOpen(true);
       }
     } catch (error) {
       showToast("Error adding item to cart.", error);
-      console.log('Failed adding product');
-      
+      console.log('Failed adding product');     
     }
   };
 

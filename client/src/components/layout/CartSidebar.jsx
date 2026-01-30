@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import SafeImage from "../UI/SafeImage";
+import {Link} from 'react-router';
 import "./CartSidebar.css";
 
 const CartSidebar = ({
@@ -42,7 +43,9 @@ const CartSidebar = ({
       <div className="cart-items">
         {(cart || []).length === 0 ? (
           <>
+            
             <p className="empty-msg">Your cart is empty.</p>
+            <Link to="/">
             <button
               onClick={onClose}
               style={{
@@ -57,6 +60,7 @@ const CartSidebar = ({
             >
               Browse Assets
             </button>
+            </Link>
           </>
         ) : (
            (cart || []).map((item) => (

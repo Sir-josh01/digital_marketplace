@@ -1,57 +1,60 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+// import { useNavigate } from "react-router";
+import axios from "axios";
 
-import CheckOutView from './CheckOutView';
+import CheckOutView from "./CheckOutView";
 
-import './CheckOutPage.css';
-import { API_BASE_URL } from '../../config';
+import "./CheckOutPage.css";
+import { API_BASE_URL } from "../../config";
 
-const CheckOutPage = ({ cart, clearCart }) => {
+const CheckOutPage = ({ cart, clearCart, user }) => {
   const [loading, setLoading] = useState(false);
 
+  // const navigate = useNavigate();
 
-  // Logic: Calculate total (safely)
-  const total = (Array.isArray(cart) ? cart : []).reduce((acc, item) => acc + Number(item.price), 0);
+  const total = (Array.isArray(cart) ? cart : []).reduce(
+    (acc, item) => acc + Number(item.price),
+    0,
+  );
 
-  // Logic: Handle the final payment process
   const handlePayment = async () => {
     if (cart.length === 0) return;
     setLoading(true);
-   
+
     try {
-       console.log("Connecting to PHP backend to process payment...");
-       const res = await axios.post(`${API_BASE_URL}/place_order.php`, {
+      const res = await axios.post(`${API_BASE_URL}/place_order.php`, {
         cart: cart,
-        total: total
-       });
+        total: total,
+        user_id: user.id,
+      });
 
-       const result = res.data;
-
-       if (result.success) {
-        alert(`Order #${result.order_id} placed successfully!`) 
+      if (res.data.success) {
+        alert(`Order placed successfully!`);
         clearCart();
-       } else {
-       throw new Error(result.error || "Failed to process order");
-       }
-    } catch(err) {
+      } else {
+        throw new Error("Failed to process order");
+      }
+    } catch (err) {
       console.error("Checkout failed", err);
-      alert(err.response?.data?.error || "There was an issue processing your payment.");
+      alert(
+        err.response?.data?.error ||
+          "There was an issue processing your payment.",
+      );
     } finally {
       setLoading(false);
-    }  
+    }
   };
 
   return (
-    <div className='checkout-page-wrapper'>
-        <CheckOutView 
-          cart={cart} 
-          total={total} 
-          handlePayment={handlePayment} 
-          isSubmitting={loading}
-          // clearCart={clearCart}
-        />
+    <div className="checkout-page-wrapper">
+      <CheckOutView
+        cart={cart}
+        total={total}
+        handlePayment={handlePayment}
+        isSubmitting={loading}
+        // clearCart={clearCart}
+      />
     </div>
-  
   );
 };
 

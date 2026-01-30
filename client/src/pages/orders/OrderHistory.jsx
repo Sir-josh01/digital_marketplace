@@ -9,24 +9,6 @@ const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const deleteOrder = async (orderId) => {
-  if (window.confirm("Are you sure you want to delete this order?")) {
-    try {
-      // We pass adminConfig as the THIRD argument for POST requests
-      const res = await axios.post(
-        `${API_BASE_URL}/delete_order.php`, 
-        { order_id: orderId }, 
-        adminConfig 
-      );
-
-      if (res.data.success) {
-        fetchOrders(); // Refresh the list
-      }
-    } catch (err) {
-      alert("Security Error: You do not have permission to delete.");
-    }
-  }
-};
 
   useEffect(() => {
     const fetchCustomerOrders = async () => {
