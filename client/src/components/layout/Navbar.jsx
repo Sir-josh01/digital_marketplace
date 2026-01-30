@@ -4,7 +4,7 @@ import { Header } from "../layout/Header";
 import { Link } from "react-router";
 import "./Navbar.css";
 
-const Navbar = ({ cart, onCartClick }) => {
+const Navbar = ({ onCartClick, cart = [], user, handleUserLogout }) => {
   // const itemCount = (cart || []).reduce((total, item) => total + item.quantity, 0);
   const [isDark, setIsDark] = useState(true);
   const itemCount = (cart || []).length;
@@ -44,6 +44,19 @@ const Navbar = ({ cart, onCartClick }) => {
           <li>
             <a href="#sell">Start Selling</a>
           </li>
+
+           <Link to="/">Shop</Link>
+            {user ? (
+              <div className="user-menu">
+                <span>Hi, {user.full_name.split(' ')[0]}</span>
+                <Link to="/history">My Orders</Link>
+                <button onClick={handleUserLogout} className="logout-link">Logout</button>
+              </div>
+            ) : (
+              <Link to="/login" className="login-nav-btn">Login</Link>
+            )}
+            <button onClick={onCartClick}>Cart ({cart.length})</button> 
+
            <li>
             <Link to="/history" className="history-link">My Orders</Link>
           </li>

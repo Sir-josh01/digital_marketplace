@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Routes, Route, useNavigate } from "react-router";
+import { Routes, Route, useNavigate, Navigate } from "react-router";
 
 // For pages
 import HomePage from "./pages/home/HomePage";
@@ -9,6 +9,8 @@ import ProductDetails from "./pages/home/ProductDetails";
 import AddProduct from "./Admin/AddProduct";
 import OrderTracking from "./pages/orders/OrderTracking";
 import AdminDashboard from "./Admin/AdminDashboard";
+import LoginPage from "./pages/Auth/LoginPage";
+import SignUpPage from "./pages/Auth/SignUpPage";
 
 // for components
 import Navbar from "./components/layout/Navbar";
@@ -33,12 +35,30 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [view, setView] = useState("shop") //shop, success, checkout
+  const [user, setUser] = useState(() => {
+  const savedUser = localStorage.getItem('ecommerceUser');
+  return savedUser ? JSON.parse(savedUser) : null;
+});
+
   const navigate = useNavigate();
 
   const adminConfig = {
   headers: {
     'X-API-KEY': import.meta.env.VITE_ADMIN_API_KEY 
   }
+};
+
+const handleLoginSuccess = (userData) => {
+  setUser(userData);
+  localStorage.setItem('ecommerceUser', JSON.stringify(userData));
+  showToast(`Welcome back, ${userData.full_name}!`);
+};
+
+const handleUserLogout = () => {
+  setUser(null);
+  localStorage.removeItem('ecommerceUser');
+  navigate("/");
+  showToast("Logged out successfully");
 };
 
   const login = () => {
@@ -227,8 +247,21 @@ function App() {
         />
       )}
 
+      {!user ? (
+        <Routes>
+        <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        {/* Redirect any other path to login if not logged in */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      ): (
       <div className="app-wrapper">
-        <Navbar onCartClick={() => setCartOpen(true)} cart={cart} />
+        <Navbar 
+         onCartClick={() => setCartOpen(true)} 
+         cart={cart || []}
+         user={user}
+         handleUserLogout={handleUserLogout} 
+        />
 
         {cartOpen && (
           <div
@@ -291,18 +324,20 @@ function App() {
                   cart={cart}
                   // completePurchase={completePurchase} 
                   clearCart={clearCart}
+                  user={user}
                   />
               } 
             />
             {/* <Route path="orders" element={ <OrdersPage cart={cart} />} />  */}
 
-            <Route path="/history" element={<OrderHistory />} />
+            <Route path="/history" element={<OrderHistory user={user} />} />
             <Route path="/track/:id" element={<OrderTracking />} />
             <Route path="/add-products" element={<AddProduct />} />
             
           </Routes>
         </div>
       </div>
+      )}
     </>
   );
 }

@@ -1,0 +1,71 @@
+/* Reusing the login-container and login-card logic for consistency */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+  padding: 20px;
+  background: var(--bg-body); /* Matches your light/dark mode */
+
+
+  /* background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); */
+  /* background: url('/assets/hero-bg.jpg') center/cover; */
+  /* height: 100vh;
+  width: 100vw; */
+
+}
+
+.login-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.login-card h3 {
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+/* Enhancing the inputs we styled earlier */
+.login-card .admin-search-input {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 14px;
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-main);
+  transition: border-color 0.3s ease;
+}
+
+.login-card .admin-search-input:focus {
+  border-color: #2196f3;
+  outline: none;
+}
+
+/* Link styling for switching between Login and Sign Up */
+.auth-switch-text {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  opacity: 0.8;
+}
+
+.auth-switch-text a {
+  color: #2196f3;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.auth-switch-text a:hover {
+  text-decoration: underline;
+}

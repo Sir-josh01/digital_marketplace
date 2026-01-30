@@ -12,5 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Include the database here too so you don't have to keep requiring it
 require_once '../config/db.php';
-
 define('ADMIN_API_KEY', 'Pastorlikeme01');
+
+?>
