@@ -2,135 +2,314 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem 5%;
-
+  padding: 0.8rem 5%;
+  height: 70px;
   background: var(--glass);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
-  z-index: 999;
+  z-index: 1000;
+}
+
+/* 1. Center Links */
+.nav-links-center {
+  display: flex;
+  list-style: none;
+  gap: 2.5rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-logo a {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease;
+  display: inline-block;
 }
 
 .nav-logo h2 {
-  font-weight: 700;
-  letter-spacing: -1px;
-  cursor: pointer;
+  font-weight: 800; 
+  letter-spacing: -1.5px;
+  color: var(--text-main);
+  margin: 0;
+  transition: filter 0.3s ease;
 }
 
-.nav-logo span {
-  color: var(--primary);
+.nav-logo h2 span {
+  color: #a855f7; /* High-end Purple (matching your primary) */
+  margin-left: 2px;
 }
 
-.nav-search input {
-  width: 400px;
-  padding: 10px 20px;
-  border-radius: 30px;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
-  outline: none;
-  transition: 0.3s;
+/* Hover Effect: Brighter and slightly larger */
+.nav-logo a:hover h2 {
+  filter: brightness(1.3); /* This "brightens it up" perfectly */
+  transform: translateY(-1px);
 }
 
-.nav-search input:focus {
-  border-color: var(--primary);
-  background: rgba(255, 255, 255, 0.1);
+.nav-logo a:active {
+  transform: scale(0.95); /* Slight "click" feel */
 }
 
-.nav-links {
-  display: flex;
-  align-items: center;
-  list-style: none;
-  gap: 30px;
-}
-
-.nav-links a {
+.nav-links-center a, .admin-trigger {
   text-decoration: none;
   color: var(--text-secondary);
   font-weight: 500;
+  font-size: 0.95rem;
   transition: 0.3s;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.nav-links a:hover {
+.nav-links-center a:hover, .admin-trigger:hover {
   color: var(--primary);
 }
 
-.cart-icon {
-  background: var(--primary);
-  border: none;
-  padding: 8px 15px;
-  border-radius: 12px;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  gap: 8px;
-}
-
-/* cart button styling */
-.nav-cart {
-  position: relative;
+/* 2. Action Group */
+.nav-actions {
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
-.cart-icon {
+.tool-btn {
   background: none;
   border: none;
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   cursor: pointer;
-  position: relative; /* Anchor for the count */
-  padding: 5px;
-  transition: transform 0.2s ease;
+  padding: 8px;
+  border-radius: 10px;
+  transition: 0.2s;
+  position: relative;
 }
 
-.cart-icon:hover {
-  transform: scale(1.1);
+.tool-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.cart-count {
+/* 3. The Badge */
+.badge {
   position: absolute;
-  top: -2px;
-  right: -5px;
-  background-color: var(--danger); /*Using the red we defined*/
+  top: 2px;
+  right: 2px;
+  background: var(--primary);
   color: white;
-  font-size: 0.7rem;
-  font-weight: bold;
-  height: 18px;
-  width: 18px;
+  font-size: 0.65rem;
+  padding: 2px 5px;
   border-radius: 50%;
+  min-width: 18px;
+}
+
+/* 4. Vertical Divider */
+.v-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  margin: 0 5px;
+}
+
+/* 5. User Profile Area */
+.user-profile {
   display: flex;
   align-items: center;
-  justify-content: center;
-  border: 2px solid white; /* Adds a clean gap between icon and badge */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  gap: 12px;
+  padding-left: 5px;
 }
 
+.user-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
 
-@media (max-width: 768px) {
-  .navbar {
-    flex-wrap: wrap; 
-    padding: 2rem 3%;
-    margin:0 10px;
-  }
+.profile-link-group {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
 
-  .nav-search {
-    order: 3; 
-    width: 100%;
-    margin-top: 15px;
-    margin-left: 10px;
-  }
+.username {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-main)
+}
 
-  .nav-search input {
-    width: 90%; 
-  }
+.sub-link {
+  font-size: 0.75rem;
+  color: var(--text-main);
+  text-decoration: none;
+}
 
-  .nav-links {
-    gap: 15px;
-    font-size: 0.9rem;
-  }
+.logout-pill {
+  background: rgba(255, 71, 87, 0.1);
+  color: #ff4757;
+  border: 1px solid rgba(255, 71, 87, 0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
 
-  .nav-logo h2 {
-    font-size: 1.2rem;
+/* 6. Admin Dropdown */
+.mobile-nav-overlay {
+  position: fixed;
+  top: 0;
+  right: -100%; /* Hidden by default */
+  width: 80%;
+  height: 100vh;
+  background: var(--bg-main);
+  /* backdrop-filter: blur(14px); */
+  z-index: 2000;
+  padding: 50px 30px;
+  /* transition: 0.4s ease-in-out; */
+  transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+  box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-nav-overlay.active {
+  right: 0;
+}
+
+.mobile-menu-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.mobile-menu-links a {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--text-main);
+  display: block;
+}
+
+.mobile-admin-block {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.menu-divider-text {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--primary); /* Use your purple here! */
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.admin-section-label {
+  color: #a855f7;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 20px;
+}
+
+.close-menu {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2.5rem;
+  background: none;
+  border: none;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.admin-dropdown { 
+  position: relative;
+  padding-bottom: 15px; /* Creates an invisible "bridge" so the menu stays open */
+  margin-bottom: -15px;
+}
+
+.admin-trigger {
+  background: rgba(168, 85, 247, 0.1); /* Subtle purple tint */
+  color: #a855f7 !important;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  font-weight: 600;
+
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  /* background: var(--bg-card); */
+  background: #1a1a1a;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  min-width: 180px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+  animation: fadeIn 0.2s ease-out;
+
+  top: 100%; /* Sits exactly at the bottom of the padding bridge */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px;
+  z-index: 1001;
+}
+
+.admin-dropdown:hover .dropdown-menu { display: block; }
+.dropdown-menu a {
+  /* padding: 10px;
+  display: block;
+  border-radius: 6px; */
+
+  padding: 12px 20px;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  text-decoration: none;
+  display: block;
+  transition: background 0.2s;
+}
+
+.admin-dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* Hide mobile menu button on desktop */
+.mobile-menu-btn {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .mobile-menu-btn {
+    display: block;
+    font-size: 1.5rem;
+    color: var(--text-main);
   }
+  
+  /* When the center links are hidden, the actions take more space */
+  .nav-actions {
+    gap: 0.5rem;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile Polish */
+@media (max-width: 900px) {
+  .nav-links-center { display: none; } /* Professionals hide center nav on mobile */
+  .navbar { padding: 0 3%; }
 }

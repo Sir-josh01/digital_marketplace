@@ -7,7 +7,7 @@ const CartSidebar = ({
   onClose,
   cart,
   removeFromCart,
-  updateQuantity,
+  // updateQuantity,
   handleProceedToCheckout
 }) => {
   // Calculate total price from the database results
@@ -59,7 +59,7 @@ const CartSidebar = ({
             </button>
           </>
         ) : (
-          Array.isArray(cart) ? cart : [].map((item) => (
+           (cart || []).map((item) => (
             <div key={item.cart_id} className="cart-item">
               <SafeImage
                 src={item.image}

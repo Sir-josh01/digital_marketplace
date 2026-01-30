@@ -261,6 +261,7 @@ const handleUserLogout = () => {
          cart={cart || []}
          user={user}
          handleUserLogout={handleUserLogout} 
+         isAdmin={isAdmin}
         />
 
         {cartOpen && (

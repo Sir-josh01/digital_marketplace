@@ -18,7 +18,7 @@ const SignUpPage = () => {
         alert(res.data.error);
       }
     } catch (err) {
-      alert("Registration failed. Please try again.");
+      alert("Registration failed. Please try again.", err);
     }
   };
 

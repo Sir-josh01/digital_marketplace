@@ -1,83 +1,104 @@
 import React, { useState, useEffect } from "react";
-// import OrderHistory from "../../pages/orders/OrderHistory";
 import { Header } from "../layout/Header";
 import { Link } from "react-router";
 import "./Navbar.css";
 
-const Navbar = ({ onCartClick, cart = [], user, handleUserLogout }) => {
-  // const itemCount = (cart || []).reduce((total, item) => total + item.quantity, 0);
+const Navbar = ({ onCartClick, cart = [], user, handleUserLogout, isAdmin }) => {
   const [isDark, setIsDark] = useState(true);
   const itemCount = (cart || []).length;
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    // Apply theme on load
-    document.documentElement.setAttribute(
-      "data-theme",
-      isDark ? "dark" : "light",
-    );
+    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
   }, [isDark]);
 
   return (
     <>
-      <nav className="navbar">
-        <div className="nav-logo">
-          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            <h2>
-              Digital<span>Market</span>
-            </h2>
-          </Link>
-        </div>
-        {/* <div className="nav-search">
-        <input type="text" placeholder="Search digital assets..." />
-      </div> */}
-        <button className="theme-toggle" onClick={() => setIsDark(!isDark)}>
-          <span className="toggle-icon">{isDark ? "☀️" : "🌙"}</span>
-          <span className="toggle-text">
-            {isDark ? "Light Mode" : "Dark Mode"}
-          </span>
+    <nav className="navbar">
+      {/* 1. BRANDING */}
+      <div className="nav-logo">
+        <Link to="/">
+          <h2>Digital<span>Market</span></h2>
+        </Link>
+      </div>
+
+      {/* 2. CENTER NAV (Hidden on mobile, professional on desktop) */}
+        <ul className="nav-links-center">
+          <li><Link to="/">Shop</Link></li>
+          <li><a href="#browse">Browse</a></li>
+          <li><a href="#sell">Start Selling</a></li>
+
+          {isAdmin && (
+            <li className="admin-dropdown">
+              <button className="admin-trigger">Admin ⚙️</button>
+              <div className="dropdown-menu">
+                <Link to="/admin">Dashboard</Link>
+                <Link to="/add-products">Add Products</Link>
+              </div>
+            </li>
+          )}
+        </ul>
+
+        {/* 3. MOBILE OVERLAY (Uses mobile-specific classes) */}
+      <div className={`mobile-nav-overlay ${isMenuOpen ? 'active' : ''}`}>
+        <button className="close-menu" onClick={() => setIsMenuOpen(false)}>×</button>
+        <ul className="mobile-menu-links">
+          <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Shop</Link></li>
+          <li><a href="#browse" onClick={() => setIsMenuOpen(false)}>Browse</a></li>
+          <li><a href="#sell" onClick={() => setIsMenuOpen(false)}>Start Selling</a></li>
+          
+          {isAdmin && (
+            <div className="mobile-admin-block">
+              <span className="menu-divider-text">Admin Management</span>
+              <li><Link to="/admin" onClick={() => setIsMenuOpen(false)}>Dashboard</Link></li>
+              <li><Link to="/add-products" onClick={() => setIsMenuOpen(false)}>Add Products</Link></li>
+            </div>
+          )}
+        </ul>
+
+      </div>
+
+      {/* 3. ACTION TOOLS */}
+      <div className="nav-actions">
+        <button 
+          className="tool-btn" 
+          onClick={() => setIsDark(!isDark)} 
+          title="Toggle Theme"
+          >
+          {isDark ? "☀️" : "🌙"}
         </button>
 
-        <ul className="nav-links">
-          <li>
-            <a href="#browse">Browse</a>
-          </li>
-          <li>
-            <a href="#sell">Start Selling</a>
-          </li>
+        <button className="tool-btn cart-trigger" onClick={onCartClick}>
+          🛒 {itemCount > 0 && <span className="badge">{itemCount}</span>}
+        </button>
 
-           <Link to="/">Shop</Link>
-            {user ? (
-              <div className="user-menu">
-                <span>Hi, {user.full_name.split(' ')[0]}</span>
-                <Link to="/history">My Orders</Link>
-                <button onClick={handleUserLogout} className="logout-link">Logout</button>
-              </div>
-            ) : (
-              <Link to="/login" className="login-nav-btn">Login</Link>
-            )}
-            <button onClick={onCartClick}>Cart ({cart.length})</button> 
+        <div className="v-divider"></div>
 
-           <li>
-            <Link to="/history" className="history-link">My Orders</Link>
-          </li>
-          <li>
-            <Link to="/add-products" className="admin-link">
-            Add Product
-          </Link>
-          </li>
-          <li><Link to="/admin" className="admin-nav-link">Admin Panel</Link></li>
-          
+        {user ? (
+          <div className="user-profile">
+            <div className="user-text">
+              <Link to="/history" className="profile-link-group">
+              <span className="username">{user.full_name.split(' ')[0]}</span>
+               <div to="/history" className="sub-link">Orders</div>
+              </Link>
+            </div>
+            <button onClick={handleUserLogout} className="logout-pill">Logout</button>
+          </div>
+        ) : (
+          <Link to="/login" className="login-btn-sleek">Sign In</Link>
+        )}
 
-          <li className="nav-cart">
-            <button className="cart-icon" onClick={onCartClick}>
-              🛒{" "}
-              {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
-            </button>
-          </li>
-        </ul>
-      </nav>
+        <button 
+          className="tool-btn mobile-menu-btn" 
+          onClick={() => setIsMenuOpen(true)}
+          >
+          ☰
+        </button>
+      </div>
+    </nav>
 
-      <Header />
+    <div><Header /></div>
+      
     </>
   );
 };
