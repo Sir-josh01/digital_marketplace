@@ -11,6 +11,7 @@ const ProductDetails = ({ addToCart }) => {
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     const getProduct = async () => {
@@ -79,17 +80,17 @@ const ProductDetails = ({ addToCart }) => {
           <div className="buy-box">
             <div className="price-tag">${product.price}</div>
             <button
-              className="add-to-cart-btn"
-              onClick={() => {
-                // console.log("Button clicked. Current product state:", product);
-                addToCart(
-                  // product?.id || product?.product_id
-                  product.id
-                );
+              className={`add-to-cart-btn ${isAdding ? "loading" : ""}`}
+              disabled={isAdding}
+              onClick={ async () => {
+                setIsAdding(true);
+                await addToCart(product.id);
+                setIsAdding(false);
               }}
             >
-              Add to Cart
+              {isAdding ? "Adding..." : "Add to Cart"}
             </button>
+
             <button className="buy-now-btn">Buy it Now</button>
 
             <ul className="spec-list">

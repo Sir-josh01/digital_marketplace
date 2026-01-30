@@ -8,8 +8,6 @@ if (isset($data['product_id'])) {
     try {
         $pid = $data['product_id'];
 
-        // 1. Check if the product is already in the cart for this user
-        // (Assuming user_id = 1 for now until you add Authentication)
         $checkSql = "SELECT id, quantity FROM cart WHERE product_id = :pid";
         $checkStmt = $pdo->prepare($checkSql);
         $checkStmt->execute([':pid' => $pid]);

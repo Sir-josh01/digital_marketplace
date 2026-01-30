@@ -76,7 +76,7 @@ const handleUserLogout = () => {
       const res = await axios.get(`${API_BASE_URL}/get_cart.php`);
 
       if (res.data.success && Array.isArray(res.data.data)) {
-        setCart(res.data.cart);
+        setCart(res.data.data);
       } else {
         setCart([]); // Fallback 
         console.error("Server Error:", res.data.error);
