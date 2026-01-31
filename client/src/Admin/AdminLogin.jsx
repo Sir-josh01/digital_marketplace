@@ -10,7 +10,7 @@ const AdminLogin = ({ onLogin }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-    const res = await axios.post(`${API_BASE_URL}/login.php`, { password });
+    const res = await axios.post(`${API_BASE_URL}/admin_login.php`, { password });
     if (res.data.success) {
       onLogin(); // Sets isAdmin to true in App.jsx
       navigate("/admin");

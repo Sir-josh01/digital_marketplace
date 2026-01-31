@@ -12,6 +12,14 @@ const Navbar = ({ onCartClick, cart = [], user, handleUserLogout, isAdmin }) => 
     document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
   }, [isDark]);
 
+  useEffect(() => {
+  if (isMenuOpen) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+}, [isMenuOpen]);
+
   return (
     <>
     <nav className="navbar">
