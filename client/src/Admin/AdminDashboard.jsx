@@ -5,13 +5,26 @@ import './AdminDashboard.css';
 
 const AdminDashboard = ({logout, orders, fetchOrders}) => {
   const [adminSearch, setAdminSearch] = useState("");
-  const filteredOrders = React.useMemo(() => {
-  return orders.filter(order => 
-    order.id.toString().includes(adminSearch) || 
-    (order.product_summary && order.product_summary.toLowerCase().includes(adminSearch.toLowerCase()))
-  );
-}, [adminSearch, orders]);
+  const [filter, setFilter] = useState("all");
 
+  const filteredOrders = React.useMemo(() => {
+    // Safety check: if orders is undefined, return empty array
+    if (!orders) return [];
+
+     return orders.filter(order => {
+      // Filter by Status
+      const matchesStatus = filter === 'all' || 
+      order.status?.toLowerCase() === filter.toLowerCase();
+      // Filter by Search (ID or Title)
+      const searchLower = adminSearch.toLowerCase();
+      const matchesSearch = 
+      order.id.toString().includes(searchLower) || 
+      (order.product_summary && order.product_summary.toLowerCase().includes(searchLower));
+
+    return matchesStatus && matchesSearch;
+  });
+
+  }, [adminSearch, filter, orders]);
 
 // Dashboard summary
   const totalSales = filteredOrders.reduce((sum, order) => sum + parseFloat(order.total_amount || 0), 0);
@@ -48,9 +61,9 @@ const AdminDashboard = ({logout, orders, fetchOrders}) => {
       alert("Error deleting order");
     }
   }
-};
+  };
 
-const downloadReport = () => {
+  const downloadReport = () => {
   // 1. Define Headers
   const headers = ["Order ID", "Items", "Total Amount", "Status", "Date"];
   
@@ -76,7 +89,7 @@ const downloadReport = () => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-};
+  };
 
   return (
     <div className="admin-container">

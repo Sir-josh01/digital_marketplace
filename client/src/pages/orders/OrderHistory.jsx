@@ -5,7 +5,7 @@ import {Link} from 'react-router'
 
 import './OrderHistory.css'
 
-const OrderHistory = () => {
+const OrderHistory = ({user}) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,7 @@ const OrderHistory = () => {
   useEffect(() => {
     const fetchCustomerOrders = async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/get_orders.php`);
+        const res = await axios.get(`${API_BASE_URL}/get_orders.php?user_id=${user.id}`);
         if (res.data.success) {
           setOrders(res.data.orders);
         }
