@@ -5,7 +5,7 @@ import {API_BASE_URL} from '../../config';
 import { getStatusStep, formatDate } from '../../utils/OrderHelpers';
 import './OrderTracking.css';
 
-const OrderTracking = () => {
+const OrderTracking = ({user}) => {
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -51,10 +51,10 @@ const OrderTracking = () => {
         
         {/* Visual Progress Tracker */}
         <div className="progress-stepper">
-          <div className="step active"><span>✓</span><p>Confirmed</p></div>
-          <div className="step active"><span>2</span><p>Processing</p></div>
-          <div className="step"><span>3</span><p>Shipped</p></div>
-          <div className="step"><span>4</span><p>Delivered</p></div>
+          <div className={`step ${currentStep >= 1 ? 'active' : ''}`}><span>{currentStep > 1 ? '✓' : '1'}</span><p>Confirmed</p></div>
+          <div className={`step ${currentStep >= 2 ? 'active' : ''}`}><span>{currentStep > 2 ? '✓' : '2'}</span><p>Processing</p></div>
+          <div className={`step ${currentStep >= 3 ? 'active' : ''}`}><span>{currentStep > 3 ? '✓' : '3'}</span><p>Shipped</p></div>
+          <div className={`step ${currentStep >= 4 ? 'active' : ''}`}><span>{currentStep >= 4 ? '✓' : '4'}</span><p>Delivered</p></div>
         </div>
 
         <div className="order-summary">
@@ -70,6 +70,19 @@ const OrderTracking = () => {
             <strong>${Number(data.order.total_amount).toFixed(2)}</strong>
           </div>
         </div>
+
+          <div className="shipping-info-grid">
+            <div className="info-box">
+              <h4>Delivery Address</h4>
+              <p>{data.order.shipping_address || "Standard Digital Delivery"}</p>
+            </div>
+            <div className="info-box">
+              <h4>Customer Contact</h4>
+              <p>{user.email}</p>
+              <p>{data.order.phone_number || "No phone provided"}</p>
+            </div>
+          </div>
+
       </div>
     </div>
   );

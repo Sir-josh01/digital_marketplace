@@ -120,7 +120,10 @@ const handleUserLogout = () => {
   const fetchOrders = async () => {
    try {
     // Note: pointing to get_admin_orders.php now
-      const res = await axios.get(`${API_BASE_URL}/get_admin_orders.php`);
+      const res = await axios.get(`${API_BASE_URL}/admin_get_orders.php`, {
+      headers: {
+        'X-API-KEY': import.meta.env.VITE_ADMIN_KEY // Must match your PHP define
+      }});
       if (res.data.success) {
         setOrders(res.data.orders);
       }
@@ -195,14 +198,23 @@ const handleUserLogout = () => {
   };
 
   const clearCart = async () => {
+
+    console.log("🚀 Signal: clearCart function triggered");
+
   try {
     const res = await axios.post(`${API_BASE_URL}/clear_cart.php`, { user_id: user.id });
+
+    console.log("✅ Signal: Backend clear_cart response:", res.data);
+
     if (res.data.success) {
       setCart([]); 
       showToast("Cart cleared");
     }
   } catch (err) {
     showToast("Failed to clear cart", err);
+
+    console.error("❌ Signal: clearCart failed", err);
+    
   }
 };
 
@@ -261,6 +273,7 @@ const handleUserLogout = () => {
                 cart={cart} 
                 removeFromCart={removeFromCart}
                 updateQuantity={updateQuantity}
+
                 handleProceedToCheckout={() => {setCartOpen(false); navigate("/checkout");}}
               />
 
@@ -272,9 +285,9 @@ const handleUserLogout = () => {
 
                   <Route path="checkout" element={<CheckOutPage cart={cart} user={user} /*clearCart={() => setCart([])} */ clearCart={clearCart} />} />
 
-                  <Route path="history" element={<OrderHistory user={user} />} />
+                  <Route path="history" element={<OrderHistory user={user} clearCart={clearCart} />} />
 
-                  <Route path="track/:id" element={<OrderTracking />} />
+                  <Route path="track/:id" element={<OrderTracking user={user} />} />
                   
                   {/* ADMIN ONLY ROUTES */}
                   <Route path="admin" element={

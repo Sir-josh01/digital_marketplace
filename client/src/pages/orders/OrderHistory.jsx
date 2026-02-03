@@ -6,7 +6,7 @@ import {Link} from 'react-router'
 
 import './OrderHistory.css'
 
-const OrderHistory = ({user}) => {
+const OrderHistory = ({user, clearCart}) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -36,15 +36,33 @@ const OrderHistory = ({user}) => {
     const verifyTransaction = async () => {
       if (reference) {
         setVerifying(true);
+
+        console.log("🔍 Signal: Found Paystack reference, starting verification...", reference);
+
         try {
           const res = await axios.get(`${API_BASE_URL}/verify_payment.php?reference=${reference}`);
+
+          console.log("📦 Signal: Verification API result:", res.data);
+
           if (res.data.success) {
+
+            console.log("💰 Signal: Payment confirmed! Calling clearCart now...");
+
             setPaymentSuccess(true);
-            // Optional: You could call a function here to clear the cart globally
-            // clearCart(); 
+            await clearCart(); 
+          } else {
+            console.warn("⚠️ Signal: Backend verified but returned success: false. Message:", res.data.message);
+          }
+          // FETCH THE UPDATED LIST SO THE NEW ORDER APPEARS IMMEDIATELY
+          const updated = await axios.get(`${API_BASE_URL}/get_orders.php?user_id=${user.id}`);
+          if (updated.data.success) {
+              setOrders(updated.data.orders);
           }
         } catch (err) {
           console.error("Verification failed", err);
+
+          console.error("🔥 Signal: Critical failure in verification flow", err);
+      
         } finally {
           setVerifying(false);
           // Remove reference from URL so it doesn't verify again on refresh

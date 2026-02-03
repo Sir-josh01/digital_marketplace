@@ -12,14 +12,14 @@ try {
     // Fetch the single order
     $stmt = $pdo->prepare("SELECT * FROM orders WHERE id = ?");
     $stmt->execute([$orderId]);
-    $order = $stmt->fetch();
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$order) throw new Exception("Order not found");
 
     // Fetch items for this specific order
     $itemStmt = $pdo->prepare("SELECT * FROM order_items WHERE order_id = ?");
     $itemStmt->execute([$orderId]);
-    $items = $itemStmt->fetchAll();
+    $items = $itemStmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode([
         "success" => true, 

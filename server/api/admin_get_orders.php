@@ -3,7 +3,8 @@ require_once 'api_init.php';
 
 // 1. Security Check
 $headers = getallheaders();
-$providedKey = $headers['X-API-KEY'] ?? '';
+// $providedKey = $headers['X-API-KEY'] ?? '';
+$providedKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
 
 if ($providedKey !== ADMIN_API_KEY) {
     http_response_code(403);

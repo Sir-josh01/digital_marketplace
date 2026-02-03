@@ -1,14 +1,27 @@
 export const getStatusStep = (status) => {
-  switch(status) {
-    case 'Confirmed': return 1;
-    case 'Processing': return 2;
-    case 'Shipped': return 3;
-    case 'Delivered': return 4;
-    default: return 1; // Default to the first step
+  const s = status ? status.toLowerCase() : '';
+
+switch(s) {
+    case 'paid':
+    case 'confirmed': 
+      return 1;
+    case 'processing': 
+      return 2;
+    case 'shipped': 
+      return 3;
+    case 'delivered': 
+      return 4;
+    default: 
+      return 0; // 0 means nothing is active yet
   }
 };
 
 // You can add more helpers here later, like date formatters
 export const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString();
+  if(!dateString) return "N/A";
+  return new Date(dateString).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
 };
