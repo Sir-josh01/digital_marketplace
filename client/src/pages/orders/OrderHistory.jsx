@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from "react-router";
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 import {Link} from 'react-router'
@@ -8,6 +9,11 @@ import './OrderHistory.css'
 const OrderHistory = ({user}) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [verifying, setVerifying] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const reference = searchParams.get("reference");
 
 
   useEffect(() => {
@@ -26,10 +32,43 @@ const OrderHistory = ({user}) => {
     fetchCustomerOrders();
   }, []);
 
+  useEffect(() => {
+    const verifyTransaction = async () => {
+      if (reference) {
+        setVerifying(true);
+        try {
+          const res = await axios.get(`${API_BASE_URL}/verify_payment.php?reference=${reference}`);
+          if (res.data.success) {
+            setPaymentSuccess(true);
+            // Optional: You could call a function here to clear the cart globally
+            // clearCart(); 
+          }
+        } catch (err) {
+          console.error("Verification failed", err);
+        } finally {
+          setVerifying(false);
+          // Remove reference from URL so it doesn't verify again on refresh
+          setSearchParams({}); 
+        }
+      }
+    };
+
+    verifyTransaction();
+  }, [reference]);
+
   if (loading) return <div className="loader">Loading your orders...</div>;
 
   return (
     <div className="order-history-container">
+      {verifying && <div className="loader">Verifying your payment...</div>}
+      
+      {paymentSuccess && (
+        <div className="status-card success">
+          <h2>🎉 Thank You for your purchase!</h2>
+          <p>Your order has been confirmed. You can track it below.</p>
+        </div>
+      )}
+
       <h2>Your Order History</h2>
       {orders.length === 0 ? (
         <p>You haven't placed any orders yet.</p>

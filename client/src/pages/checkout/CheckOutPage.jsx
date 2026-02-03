@@ -13,7 +13,7 @@ const CheckOutPage = ({ cart, clearCart, user }) => {
   // const navigate = useNavigate();
 
   const total = (Array.isArray(cart) ? cart : []).reduce(
-    (acc, item) => acc + Number(item.price),
+    (acc, item) => acc + (Number(item.price) * (item.quantity || 1)),
     0,
   );
 
@@ -22,27 +22,29 @@ const CheckOutPage = ({ cart, clearCart, user }) => {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/place_order.php`, {
-        cart: cart,
-        total: total,
+      const res = await axios.post(`${API_BASE_URL}/initialize_payment.php`, {
         user_id: user.id,
+        email: user.email, // Required by Paystack
+        amount: total,     // Total in Naira
+        cart: cart         // Pass cart items for record keeping
       });
 
-      if (res.data.success) {
-        alert(`Order placed successfully!`);
-        clearCart();
+      if (res.data.status && res.data.data.authorization_url) {
+        // Redirect the user to the Paystack Payment Page
+        window.location.href = res.data.data.authorization_url;
       } else {
-        throw new Error("Failed to process order");
+        throw new Error(res.data.message || "Failed to initialize payment gateway.");
+        }
+      } catch (err) {
+        console.error("Payment initialization failed", err);
+        alert(
+          err.response?.data?.error || 
+        err.message || 
+        "There was an issue connecting to the payment gateway."
+        );
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Checkout failed", err);
-      alert(
-        err.response?.data?.error ||
-          "There was an issue processing your payment.",
-      );
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -52,7 +54,7 @@ const CheckOutPage = ({ cart, clearCart, user }) => {
         total={total}
         handlePayment={handlePayment}
         isSubmitting={loading}
-        // clearCart={clearCart}
+        clearCart={clearCart}
       />
     </div>
   );

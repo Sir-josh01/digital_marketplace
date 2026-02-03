@@ -270,7 +270,7 @@ const handleUserLogout = () => {
 
                   <Route path="product/:id" element={<ProductDetails addToCart={addToCart} />} />
 
-                  <Route path="checkout" element={<CheckOutPage cart={cart} user={user} clearCart={() => setCart([])} />} />
+                  <Route path="checkout" element={<CheckOutPage cart={cart} user={user} /*clearCart={() => setCart([])} */ clearCart={clearCart} />} />
 
                   <Route path="history" element={<OrderHistory user={user} />} />
 
