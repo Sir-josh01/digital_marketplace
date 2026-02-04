@@ -87,7 +87,7 @@ const CheckOutPage = ({ cart, clearCart, user }) => {
 
       <div className="payment-summary">
         <div className="total-display">
-          <h3>Total: ${total.toFixed(2)}</h3>
+          {/* <h3>Total: ${total.toFixed(2)}</h3> */}
           <p className="currency-note">
             (Processed as <strong>₦{totalNGN}</strong>)
           </p>

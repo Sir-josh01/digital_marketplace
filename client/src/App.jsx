@@ -237,10 +237,6 @@ const handleUserLogout = () => {
 
   useEffect(() => { loadCart(); }, [loadCart]);
 
-  useEffect(() => {
-  if (isAdmin) fetchOrders();
-}, [isAdmin]);
-
   return (
     <>
       {toast.show && (
