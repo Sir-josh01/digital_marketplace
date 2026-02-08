@@ -11,6 +11,34 @@
   color: var(--text-main); /*added*/
 }
 
+.admin-controls select {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 10px 15px;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-controls select:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 8px rgba(33, 150, 243, 0.2);
+}
+
+.admin-controls input,
+.admin-controls select {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #ddd);
+  background-color: var(--card-bg, #fff);
+  color: var(--text-color, #333);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
 .admin-header {
   display: flex;
   justify-content: space-between;
@@ -94,7 +122,7 @@
   background: var(--bg-card);
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border-left: 4px solid #2196f3; /* Accent color */
 }
 
@@ -110,9 +138,20 @@
   color: var(--text-main);
 }
 
+.stat-card {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
 .table-responsive {
   width: 100%;
-  overflow-x: auto; 
+  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -141,7 +180,7 @@
 
 .admin-table td:last-child {
   white-space: nowrap;
-  width: 1%; 
+  width: 1%;
 }
 
 .admin-table th {
@@ -157,7 +196,7 @@
 /* added */
 .admin-table td {
   padding: 15px;
-  border-bottom: 1px solid var(--border-color); 
+  border-bottom: 1px solid var(--border-color);
   color: var(--text-main);
 }
 
@@ -172,7 +211,9 @@
 
   font-family: inherit;
   font-size: 0.9rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .admin-table select:hover {
@@ -198,6 +239,14 @@
 [data-theme="light"] .admin-table select option {
   background-color: #ffffff;
   color: #333333;
+}
+
+.status-paid {
+  color: #00bcd4; /* Cyan color for Paid */
+  background: rgba(0, 188, 212, 0.1);
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: 600;
 }
 
 .status-confirmed {
@@ -245,9 +294,10 @@
 
 @media (max-width: 600px) {
   .admin-container {
-    padding: 15px; 
+    padding: 15px;
   }
-  .admin-table th, .admin-table td {
+  .admin-table th,
+  .admin-table td {
     padding: 10px;
     font-size: 0.9rem;
   }

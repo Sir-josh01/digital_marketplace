@@ -3,11 +3,17 @@ import axios from "axios";
 import { API_BASE_URL } from "../config";
 import "./AdminDashboard.css";
 
-const AdminDashboard = ({ logout, orders, fetchOrders }) => {
+const AdminDashboard = ({ logout }) => {
   const [adminOrders, setAdminOrders] = useState([]);
   const [adminSearch, setAdminSearch] = useState("");
   const [filter, setFilter] = useState("all");
+  const [stats, setStats] = useState({
+    total_revenue: 0,
+    total_orders: 0,
+    top_product: "N/A",
+  });
 
+  // filter logic
   const filteredOrders = React.useMemo(() => {
     // Safety check: if orders is undefined, return empty array
     if (!adminOrders) return [];
@@ -53,6 +59,19 @@ const AdminDashboard = ({ logout, orders, fetchOrders }) => {
     }
   };
 
+  const fetchStats = async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/admin_get_stats.php`, {
+        headers: { "X-API-KEY": import.meta.env.VITE_ADMIN_API_KEY },
+      });
+      if (res.data.success) {
+        setStats(res.data.stats);
+      }
+    } catch (err) {
+      console.error("Error fetching stats", err);
+    }
+  };
+
   const updateStatus = async (orderId, newStatus) => {
     try {
       const res = await axios.post(`${API_BASE_URL}/update_order_status.php`, {
@@ -72,11 +91,13 @@ const AdminDashboard = ({ logout, orders, fetchOrders }) => {
   const deleteOrder = async (orderId) => {
     if (window.confirm("Are you sure you want to delete this order?")) {
       try {
-        const res = await axios.post(`${API_BASE_URL}/delete_order.php`, {
-          order_id: orderId,
-        },
-        { headers: { "X-API-KEY": import.meta.env.VITE_ADMIN_API_KEY } }
-      );
+        const res = await axios.post(
+          `${API_BASE_URL}/delete_order.php`,
+          {
+            order_id: orderId,
+          },
+          { headers: { "X-API-KEY": import.meta.env.VITE_ADMIN_API_KEY } },
+        );
         if (res.data.success) {
           fetchAdminOrders(); // Refresh the list
         }
@@ -119,10 +140,25 @@ const AdminDashboard = ({ logout, orders, fetchOrders }) => {
 
   useEffect(() => {
     fetchAdminOrders();
+    fetchStats();
   }, []);
 
   return (
     <div className="admin-container">
+      <div className="admin-stats">
+        <div className="stat-card">
+          <span>Total Revenue (All Time)</span>
+          <h3>${Number(stats.total_revenue).toFixed(2)}</h3>
+        </div>
+        <div className="stat-card">
+          <span>Total Orders</span>
+          <h3>{stats.total_orders}</h3>
+        </div>
+        <div className="stat-card">
+          <span>Best Seller</span>
+          <h3>{stats.top_product}</h3>
+        </div>
+      </div>
       <div className="admin-header">
         <h2>Admin: Order Management</h2>
 
@@ -134,10 +170,20 @@ const AdminDashboard = ({ logout, orders, fetchOrders }) => {
             value={adminSearch}
             onChange={(e) => setAdminSearch(e.target.value)}
           />
-        </div>
+          {/* Status Filter Dropdown */}
+          <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+             <option value="all">All Statuses</option>
+             <option value="Paid">Paid</option>
+             <option value="Shipped">Shipped</option>
+             <option value="Delivered">Delivered</option>
+          </select>
         <button onClick={downloadReport} className="download-btn">
           📥 Download Report
         </button>
+        </div>
+        {/* <button onClick={downloadReport} className="download-btn">
+          📥 Download Report
+        </button> */}
         <button onClick={logout} className="logout-link">
           Logout
         </button>

