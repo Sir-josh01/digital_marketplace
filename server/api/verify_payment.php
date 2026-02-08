@@ -1,6 +1,7 @@
 <?php
 error_reporting(0);
 require_once 'api_init.php';
+require_once 'send_order_email.php';
 
 $reference = $_GET['reference'] ?? null;
 
@@ -22,30 +23,31 @@ $response = curl_exec($ch);
 curl_close($ch);
 $result = json_decode($response, true);
 
+  
 // 3. Process if success
 if ($result['status'] && $result['data']['status'] === 'success') {
-  $meta = $result['data']['metadata'];
+  $data = $result['data'];
+  $meta = $data['metadata'];
   $user_id = $meta['user_id'];
 
+  $user_email = $data['customer']['email'];
+  $amount_paid = $data['amount'] / 100; // Total in Naira
   // Logic: Convert back to USD
-  $total_in_usd = ($result['data']['amount'] / 100) / 1550;
+  $total_in_usd = $amount_paid / 1550;
 
-  // IMPORTANT: Check if your initialize_payment used 'cart' or 'cart_items'
-  // SMART CHECK: Look for 'cart' OR 'cart_items'
   $cart_data = $meta['cart'] ?? $meta['cart_items'] ?? null;
   $cart = is_string($cart_data) ? json_decode($cart_data, true) : $cart_data;
 
-  // $cart = is_string($meta['cart']) ? json_decode($meta['cart'], true) : $meta['cart'];
   $address = $meta['address'] ?? $meta['shipping_address'] ?? 'Digital Delivery';
   $phone = $meta['phone'] ?? $meta['phone_number'] ?? 'N/A';
 
-  if (!$cart) {
-    echo json_encode(["success" => false, "message" => "Cart data missing from metadata"]);
-    exit;
-  }
+  // if (!$cart) {
+  //   echo json_encode(["success" => false, "message" => "Cart data missing from metadata"]);
+  //   exit;
+  // }
 
   try {
-    $checkStmt = $pdo->prepare("SELECT id FROM orders WHERE user_id = ? AND total_amount = ? AND created_at > NOW() - INTERVAL 1 MINUTE");
+    // $checkStmt = $pdo->prepare("SELECT id FROM orders WHERE user_id = ? AND total_amount = ? AND created_at > NOW() - INTERVAL 1 MINUTE");
 
     $pdo->beginTransaction();
     // Save Order
@@ -67,6 +69,16 @@ if ($result['status'] && $result['data']['status'] === 'success') {
     $stmt_clear->execute([$user_id]);
 
     $pdo->commit();
+
+     // TRIGGER EMAIL SIGNAL
+         // for Email
+    // if ($stmt->execute()) {
+    //   $order_id = $pdo->lastInsertId();
+      
+    //   echo json_encode(["success" => true, "message" => "Order saved and email sent"]);
+    // }
+    sendOrderConfirmation($user_email, $order_id, $amount_paid, $address);
+
     echo json_encode(["success" => true, "order_id" => $order_id]);
   } catch (Exception $e) {
     if ($pdo->inTransaction()) $pdo->rollBack();
