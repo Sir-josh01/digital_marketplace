@@ -43,6 +43,60 @@
   border: 3px solid;
 }
 
+.cart-item-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 15px;
+}
+
+.qty-controls {
+  display: flex;
+  align-items: center;
+  background: var(--bg-body);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2px 8px;
+}
+
+.qty-btn {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 8px;
+  transition: color 0.2s;
+}
+
+.qty-btn:hover {
+  color: var(--primary);
+}
+
+.qty-number {
+  font-weight: 700;
+  font-size: 0.9rem;
+  min-width: 20px;
+  text-align: center;
+}
+
+.remove-link {
+  background: none;
+  border: none;
+  color: #ff4757;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.remove-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
 .cart-item img {
   width: 50%;
   height: 50%;
@@ -50,16 +104,6 @@
   object-fit: cover;
 }
 
-.remove-link {
-  background: var(--glass);
-  border: 1 solid var(--border);
-  color: var(--danger);
-  border-radius: 8px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  padding: 5px;
-  margin-top: 5px;
-}
 
 .cart-footer {
   padding: 24px;
@@ -92,7 +136,6 @@
   margin: 5px 5px;
 }
 
-/* Fix the Item Details alignment */
 .item-details {
   flex: 1;
   display: flex;
@@ -112,40 +155,6 @@
   border-radius: 10px;
   font-size: 0.9rem;
   margin-left: 10px;
-}
-
-.qty-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--border); /* Subtle background */
-  padding: 4px 8px;
-  border-radius: 8px;
-  width: fit-content;
-  width: 80%;
-  margin-top: 20px;
-}
-
-.qty-btn {
-  background: none;
-  border: none;
-  color: var(--text-main);
-  cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: bold;
-  padding: 0 5px;
-  transition: color 0.2s;
-  width: 80%;
-}
-
-.qty-btn:hover {
-  color: var(--primary);
-}
-
-.qty-number {
-  font-weight: 600;
-  min-width: 20px;
-  text-align: center;
 }
 
 /* Close Button Styling */
@@ -187,8 +196,8 @@
 
 @media (max-width: 768px) {
   .cart-sidebar {
-    width: 85%; /* Take up more space on mobile */
-    right: -85%;
+    width: 75%; /* Take up more space on mobile */
+    right: -75%;
   }
 }
 

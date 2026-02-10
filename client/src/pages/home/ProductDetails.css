@@ -1,4 +1,3 @@
-
 .details-container {
   display: grid;
   grid-template-columns: 1fr 350px;
@@ -15,12 +14,29 @@
   flex: 1;
 }
 
-.main-preview img {
+.main-preview-wrapper {
   width: 100%;
+  aspect-ratio: 16 / 10; /* Ensures all images share the same footprint */
+  background: var(--bg-card);
   border-radius: 24px;
   border: 1px solid var(--border);
-  max-height: 500px; 
-  object-fit: cover;
+  overflow: hidden; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.details-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This is what prevents stretching */
+  transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.main-preview-wrapper:hover .details-img {
+  transform: scale(1.05); /* Smooth premium zoom */
 }
 
 .details-text h1 {
@@ -35,23 +51,24 @@
 }
 
 /* style add-btn */
-.add-to-cart-btn {
+.add-to-cart-btn,
+.buy-now-btn {
   width: 100%;
-  padding: 10px;
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  height: 55px; /* Consistent height for both main actions */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-weight: 700;
   cursor: pointer;
-  color: var(--primary);
-  background: transparent;
-  border: 1px solid var(--primary);
-
   transition: all 0.3s ease;
-  transition:
-    transform 0.2s,
-    background 0.3s;
+  margin-bottom: 12px;
+}
+
+.add-to-cart-btn {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
 }
 
 .add-to-cart-btn:hover {
@@ -65,11 +82,10 @@
   color: white;
 }
 
-
 /* The Buy Box (Glassmorphism) */
 .buy-box {
   background: var(--glass);
-  backdrop-filter: blur(10px); /* Add this for true glass effect */
+  backdrop-filter: blur(10px); 
   border: 1px solid var(--border);
   border-radius: 24px;
   padding: 30px;
@@ -84,20 +100,31 @@
   margin-bottom: 20px;
 }
 
-.add-to-cart-btn,
 .buy-now-btn {
-  width: 100%;
+ width: 100%;
   padding: 15px;
   border-radius: 12px;
   font-weight: bold;
-  margin-bottom: 12px;
   cursor: pointer;
-}
-
-.buy-now-btn {
-  background: var(--primary);
+  background: var(--primary); /* Uses your purple brand color */
   border: none;
   color: white;
+  transition: all 0.3s ease;
+}
+
+.buy-now-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(168, 85, 247, 0.3);
+}
+
+.buy-now-btn:active {
+  transform: translateY(0);
+}
+
+.buy-now-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .spec-list {
@@ -155,8 +182,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .error {
@@ -184,19 +215,20 @@
   font-weight: 600;
 }
 
-
-/* These styling affects the one in the sidebar */
-
-/* 1. THE SHARED RULES: Both images and placeholders fill their container */
-.details-img, .product-img, .cart-thumb, .image-placeholder {
+/* .details-img,
+.product-img,
+.cart-thumb,
+.image-placeholder {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: inherit; 
-}
+  border-radius: inherit;
+
+  transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+} */
 
 /* 2. THE PLACEHOLDER STYLE: Keeps your glassmorphism look */
 .image-placeholder {
@@ -213,42 +245,23 @@
   opacity: 0.6;
 }
 
-/* 3. THE SIZE CONTROLLERS: This is the missing piece! */
-/* Use these classes on the DIV wrapping your SafeImage */
-
-/* .details-preview-wrapper {
-  width: 100%;
-  height: 400px;
-  border-radius: 24px;
-  overflow: hidden;
-} */
-
-/* .sidebar-thumb-wrapper {
-  width: 70px;  
-  height: 70px;
-  flex-shrink: 0; 
-  border-radius: 8px;
-  overflow: hidden;
-} */
-
 /* for smaller screens */
 @media (max-width: 900px) {
   .details-container {
     /* Switch from 2 columns to 1 column */
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
     gap: 20px;
-    padding: 20px;
   }
 
   /* Make the sidebar purchase box stop sticking and flow naturally */
   .buy-box {
-    position: static; 
+    position: static;
     width: 90%;
     margin-top: 20px;
   }
 
   .details-preview-wrapper {
-    height: 300px; 
+    height: 300px;
   }
 
   .details-text h1 {

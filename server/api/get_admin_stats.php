@@ -2,7 +2,6 @@
 require_once 'api_init.php';
 header('Content-Type: application/json');
 
-// Simple Security Check (Matching your Dashboard's API Key)
 $api_key = $_SERVER['HTTP_X_API_KEY'] ?? '';
 if ($api_key !== 'your_actual_key_here') { // Match your .env VITE_ADMIN_API_KEY
     http_response_code(403);

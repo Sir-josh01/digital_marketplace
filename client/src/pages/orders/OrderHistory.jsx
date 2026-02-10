@@ -22,27 +22,20 @@ const OrderHistory = ({ user, clearCart }) => {
       return;
     }
 
-    console.log(
-      `📡 Signal: Fetching orders from DB for User ID: ${user.id}...`,
-    );
-
     try {
       const res = await axios.get(
         `${API_BASE_URL}/get_orders.php?user_id=${user.id}`,
       );
 
-      if (typeof res.data === "string") {
-        console.error(
-          "📡 Signal: Critical! Backend sent HTML instead of JSON. Check PHP warnings.",
-        );
-        return;
-      }
+      // if (typeof res.data === "string") {
+      //   console.error(
+      //     "📡 Signal: Critical! Backend sent HTML instead of JSON. Check PHP warnings.",
+      //   );
+      //   return;
+      // }
+      
       if (res.data.success) {
-        console.log(`📡 Signal: Found ${res.data.orders.length} orders in DB.`);
         setOrders(res.data.orders);
-
-        // setPaymentSuccess(true);
-
       } else {
         console.error(
           "📡 Signal: Server returned success:false. Error:",
@@ -74,27 +67,19 @@ const OrderHistory = ({ user, clearCart }) => {
           res.data.success ||
           (res.data.message && res.data.message.includes("1062"))
         ) {
-
-          // clearCart();
-          // fetchCustomerOrders();
-
-
-          console.log("💰 Signal: Payment confirmed! Calling clearCart now...");
+          console.log("Payment confirmed");
 
           await clearCart();
           await fetchCustomerOrders();
           setSearchParams({});
           setPaymentSuccess(true);
-
         }
-
       } catch (err) {
         console.error("Verification failed", err);
         fetchCustomerOrders();
 
         if (err.response) console.log("Backend Error Data:", err.response.data);
 
-        console.error("🔥 Signal: Critical failure in verification flow", err);
       } finally {
         setVerifying(false);
       }

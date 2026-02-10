@@ -21,7 +21,7 @@ try {
         unset($user['password']); 
         echo json_encode(["success" => true, "user" => $user]);
     } else {
-        echo json_encode(["success" => false, "error" => "Invalid email or password"]);
+        echo json_encode(["success" => false, "error" => "Invalid email or password, Sign up if you do have an Account"]);
     }
 } catch (PDOException $e) {
     echo json_encode(["success" => false, "error" => "Database error"]);

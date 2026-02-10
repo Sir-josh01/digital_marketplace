@@ -1,21 +1,29 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { API_BASE_URL } from "../../config";
 import axios from "axios";
 import SafeImage from "../../components/UI/SafeImage";
 import "./ProductDetails.css";
 
-const ProductDetails = ({ addToCart }) => {
+const ProductDetails = ({ addToCart, openCart }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
 
+  // --- BUY IT NOW LOGIC ---
+  const handleBuyNow = async () => {
+    setIsAdding(true);
+    await addToCart(product.id);
+    setIsAdding(false);
+   if (openCart) {
+      openCart(); 
+    }
+  };
+
   useEffect(() => {
     const getProduct = async () => {
-      // console.log("1.Trying to get product-details");
       try {
         const res = await axios.get(
           `${API_BASE_URL}/get_single_product.php?id=${id}`,
@@ -23,7 +31,6 @@ const ProductDetails = ({ addToCart }) => {
         // IMPORTANT: If PHP returns an array, take the first item
         const data = Array.isArray(res.data) ? res.data[0] : res.data;
         setProduct(data);
-        // console.log("Product details acquired:", data);
       } catch (err) {
         console.log("Failed to fetch products at productDetails: ", err);
       } finally {
@@ -58,7 +65,7 @@ const ProductDetails = ({ addToCart }) => {
             ← Back to Marketplace
           </button>
 
-          <div className="main-preview">
+          <div className="main-preview-wrapper">
             <SafeImage
               src={product.image}
               alt={product.title}
@@ -82,7 +89,7 @@ const ProductDetails = ({ addToCart }) => {
             <button
               className={`add-to-cart-btn ${isAdding ? "loading" : ""}`}
               disabled={isAdding}
-              onClick={ async () => {
+              onClick={async () => {
                 setIsAdding(true);
                 await addToCart(product.id);
                 setIsAdding(false);
@@ -91,7 +98,13 @@ const ProductDetails = ({ addToCart }) => {
               {isAdding ? "Adding..." : "Add to Cart"}
             </button>
 
-            <button className="buy-now-btn">Buy it Now</button>
+            <button 
+              className="buy-now-btn"
+              onClick={handleBuyNow}
+              disabled={isAdding}
+              >
+               {isAdding ? "Redirecting..." : "Buy it Now"}
+              </button>
 
             <ul className="spec-list">
               <li>

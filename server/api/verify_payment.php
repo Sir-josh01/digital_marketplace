@@ -22,7 +22,14 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     "Authorization: Bearer sk_test_96799ba003ecaf67648388cd9714491e05b76986",
     "Cache-Control: no-cache",
 ]);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 $response = curl_exec($ch);
+
+if ($response === false) {
+    echo json_encode(["success" => false, "message" => "CURL Error: " . curl_error($ch)]);
+    exit;
+}
+
 curl_close($ch);
 $result = json_decode($response, true);
 
@@ -31,6 +38,7 @@ if ($result && isset($result['data']) && $result['data']['status'] === 'success'
     $meta = $data['metadata'] ?? [];
     
     $user_id = $meta['user_id'] ?? null;
+    $user_email = $data['customer']['email'] ?? null;
     $amount_naira = $data['amount'] / 100;
     $total_usd = $amount_naira / 1550; // Your conversion rate
 
@@ -41,13 +49,22 @@ if ($result && isset($result['data']) && $result['data']['status'] === 'success'
     try {
         $pdo->beginTransaction();
 
+        // Check if reference already exists to prevent 1062 crash
+        $check = $pdo->prepare("SELECT id FROM orders WHERE paystack_ref = ?");
+        $check->execute([$reference]);
+        if ($check->fetch()) {
+            $pdo->rollBack();
+            echo json_encode(["success" => true, "message" => "1062: Already processed"]);
+            exit;
+        }
+
         // 2. Insert into 'orders' table (Matched to your columns)
         $stmt = $pdo->prepare("INSERT INTO orders (total_amount, shipping_address, phone_number, notes, status, user_id, paystack_ref) VALUES (?, ?, ?, ?, 'Paid', ?, ?)");
         $stmt->execute([$total_usd, $address, $phone, $notes, $user_id, $reference]);
         $order_id = $pdo->lastInsertId();
 
         // 3. Get items from 'cart' JOINED with 'products' to get the 'title'
-        // Your order_items table requires 'product_title'
+        
         $stmt_get_cart = $pdo->prepare("
             SELECT c.product_id, c.quantity, p.title as product_title, p.price 
             FROM cart c 
@@ -59,6 +76,10 @@ if ($result && isset($result['data']) && $result['data']['status'] === 'success'
 
         if (empty($cart_items)) {
             throw new Exception("Cart is empty in database for user $user_id");
+
+            $pdo->rollBack();
+            echo json_encode(["success" => true, "message" => "Order already processed (Cart Empty)"]);
+            exit;
         }
 
         // 4. Insert into 'order_items' (Matched to your columns)
@@ -92,8 +113,7 @@ if ($result && isset($result['data']) && $result['data']['status'] === 'success'
         try {
             if (file_exists('send_order_email.php')) {
                 require_once 'send_order_email.php';
-                if (function_exists('sendOrderEmail') && !empty($user_email)) {
-                    // We use amount_naira or total_usd depending on what you want the user to see
+                if (function_exists('sendOrderEmail') &&$user_email) {
                     sendOrderEmail($user_email, $order_id, $total_usd);
                 }
             }
@@ -106,8 +126,7 @@ if ($result && isset($result['data']) && $result['data']['status'] === 'success'
 
     } catch (Exception $e) {
         if ($pdo->inTransaction()) $pdo->rollBack();
-        error_log("❌ DB Error: " . $e->getMessage());
-        echo json_encode(["success" => false, "message" => $e->getMessage()]);
+        echo json_encode(["success" => false, "message" => "Verification: " . $e->getMessage()]);
     }
 } else {
     echo json_encode(["success" => false, "message" => "Paystack verification failed"]);

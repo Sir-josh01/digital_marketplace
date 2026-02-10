@@ -8,7 +8,7 @@ const CartSidebar = ({
   onClose,
   cart,
   removeFromCart,
-  // updateQuantity,
+  updateQuantity,
   handleProceedToCheckout
 }) => {
   // Calculate total price from the database results
@@ -80,27 +80,30 @@ const CartSidebar = ({
                   )}
                 </p>
 
-                <button
-                  className="remove-link"
-                  onClick={() => removeFromCart(item.cart_id)}
-                >
-                  Remove
-                </button>
-                {/* <div className="qty-controls">
+                <div className="cart-item-actions">
+                  <div className="qty-controls">
                     <button
-                      onClick={() => updateQuantity(item.id, -1)}
+                      onClick={() => updateQuantity(item.cart_id, -1)}
                       className="qty-btn"
                     >
                       −
                     </button>
                     <span className="qty-number">{item.quantity}</span>
                     <button
-                      onClick={() => updateQuantity(item.id, 1)}
+                      onClick={() => updateQuantity(item.cart_id, 1)}
                       className="qty-btn"
                     >
                       +
                     </button>
-                  </div> */}
+                  </div>
+
+                  <button
+                    className="remove-link"
+                    onClick={() => removeFromCart(item.cart_id)}
+                  >
+                    Remove
+                  </button>
+                </div>
               </div>
             </div>
           ))

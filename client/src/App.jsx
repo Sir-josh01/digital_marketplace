@@ -102,7 +102,7 @@ const handleUserLogout = () => {
     }
 
     try {
-      const res = await axios.get(`${API_BASE_URL}/get_cart.php?user_id=${user.id}`);
+      const res = await axios.get(`${API_BASE_URL}/get_cart.php?user_id=${user.id}?t=${Date.now()}`);
 
       if (res.data.success && Array.isArray(res.data.data)) {
         setCart(res.data.data);
@@ -152,29 +152,33 @@ const handleUserLogout = () => {
     }
   };
 
-  const updateQuantity = async (productId, change) => {
+  const updateQuantity = async (cartId, change) => {
+   
+    setCart(prevCart => 
+    prevCart.map(item => {
+      if (item.cart_id === cartId) {  
+        return { ...item, quantity: Math.max(0, item.quantity + change) }; 
+      }
+      return item;
+      }).filter(item => item.quantity > 0)
+  );
+
     try {
       const res = await axios.post(`${API_BASE_URL}/update_cart_quantity.php`, {
-        product_id: productId,
+        cart_id: cartId,
         change: change,
-        user_id: user.id
       });
-      console.log("Full Axios Response:", res);
-      if (res.data.success) {
-        await loadCart();
+
+      if (!res.data.success) {
+        loadCart();
+        console.error("Backend failed, reverting state");  
       } else {
-        console.error(
-          "Logic Error:",
-          res.data ? res.data.message : "No data received from server",
-        );
+        console.log("I send myself:");
       }
     } catch (err) {
       showToast("Could not update quantity");
+      loadCart();
       console.error("Network Error:", err);
-      console.error(
-        "System Error:",
-        err.response ? err.response.data : err.message,
-      );
     }
   };
 
@@ -198,13 +202,8 @@ const handleUserLogout = () => {
   };
 
   const clearCart = async () => {
-
-    console.log("🚀 Signal: clearCart function triggered");
-
   try {
     const res = await axios.post(`${API_BASE_URL}/clear_cart.php`, { user_id: user.id });
-
-    console.log("✅ Signal: Backend clear_cart response:", res.data);
 
     if (res.data.success) {
       setCart([]); 
@@ -212,8 +211,6 @@ const handleUserLogout = () => {
     }
   } catch (err) {
     showToast("Failed to clear cart", err);
-
-    console.error("❌ Signal: clearCart failed", err);
     
   }
 };
@@ -232,6 +229,7 @@ const handleUserLogout = () => {
   //   navigate("/checkout");
   // }
 
+  
   // EFFECTS
   useEffect(() => {fetchProducts();}, []);
 
@@ -277,7 +275,7 @@ const handleUserLogout = () => {
                 <Routes>
                   <Route index element={<HomePage products={products} loading={loading} error={error} addToCart={addToCart} />} />
 
-                  <Route path="product/:id" element={<ProductDetails addToCart={addToCart} />} />
+                  <Route path="product/:id" element={<ProductDetails addToCart={addToCart} openCart={() => setCartOpen(true)} />} />
 
                   <Route path="checkout" element={<CheckOutPage cart={cart} user={user} /*clearCart={() => setCart([])} */ clearCart={clearCart} />} />
 

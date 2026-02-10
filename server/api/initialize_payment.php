@@ -43,6 +43,7 @@ curl_setopt($ch,CURLOPT_HTTPHEADER, array(
   "Cache-Control: no-cache",
 ));
 curl_setopt($ch,CURLOPT_RETURNTRANSFER, true); 
+// curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
 // Execute post
 $result = curl_exec($ch);
