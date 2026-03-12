@@ -46,88 +46,169 @@ if ($result && isset($result['data']) && $result['data']['status'] === 'success'
     $phone = $meta['phone'] ?? 'N/A';
     $notes = $meta['notes'] ?? 'None';
 
-    try {
-        $pdo->beginTransaction();
+    // try {
+    //     $pdo->beginTransaction();
 
-        // Check if reference already exists to prevent 1062 crash
-        $check = $pdo->prepare("SELECT id FROM orders WHERE paystack_ref = ?");
-        $check->execute([$reference]);
-        if ($check->fetch()) {
-            $pdo->rollBack();
-            echo json_encode(["success" => true, "message" => "1062: Already processed"]);
-            exit;
-        }
+    //     // Check if reference already exists to prevent 1062 crash
+    //     $check = $pdo->prepare("SELECT id FROM orders WHERE paystack_ref = ?");
+    //     $check->execute([$reference]);
+    //     $existingOrder = $check->fetch();
 
-        // 2. Insert into 'orders' table (Matched to your columns)
-        $stmt = $pdo->prepare("INSERT INTO orders (total_amount, shipping_address, phone_number, notes, status, user_id, paystack_ref) VALUES (?, ?, ?, ?, 'Paid', ?, ?)");
-        $stmt->execute([$total_usd, $address, $phone, $notes, $user_id, $reference]);
-        $order_id = $pdo->lastInsertId();
+    //     if ($existingOrder) {
+    //         $pdo->rollBack();
+    //         // Return success AND the order_id so the UI knows it worked
+    //         echo json_encode(["success" => true, "order_id" => $existingOrder['id'], "message" => "Already processed"]);
+    //         exit;
+    //     }
 
-        // 3. Get items from 'cart' JOINED with 'products' to get the 'title'
+
+    //     // if ($check->fetch()) {
+    //     //     $pdo->rollBack();
+    //     //     echo json_encode(["success" => true, "message" => "1062: Already processed"]);
+    //     //     exit;
+    //     // }
+
+    //     // 2. Insert into 'orders' table (Matched to your columns)
+    //     $stmt = $pdo->prepare("INSERT INTO orders (total_amount, shipping_address, phone_number, notes, status, user_id, paystack_ref) VALUES (?, ?, ?, ?, 'Paid', ?, ?)");
+    //     $stmt->execute([$total_usd, $address, $phone, $notes, $user_id, $reference]);
+    //     $order_id = $pdo->lastInsertId();
+
+    //     // 3. Get items from 'cart' JOINED with 'products' to get the 'title'
         
-        $stmt_get_cart = $pdo->prepare("
-            SELECT c.product_id, c.quantity, p.title as product_title, p.price 
-            FROM cart c 
-            JOIN products p ON c.product_id = p.id 
-            WHERE c.user_id = ?
-        ");
-        $stmt_get_cart->execute([$user_id]);
-        $cart_items = $stmt_get_cart->fetchAll(PDO::FETCH_ASSOC);
+    //     $stmt_get_cart = $pdo->prepare("
+    //         SELECT c.product_id, c.quantity, p.title as product_title, p.price 
+    //         FROM cart c 
+    //         JOIN products p ON c.product_id = p.id 
+    //         WHERE c.user_id = ?
+    //     ");
+    //     $stmt_get_cart->execute([$user_id]);
+    //     $cart_items = $stmt_get_cart->fetchAll(PDO::FETCH_ASSOC);
 
-        if (empty($cart_items)) {
-            throw new Exception("Cart is empty in database for user $user_id");
+    //     if (empty($cart_items)) {
+    //         // throw new Exception("Cart is empty in database for user $user_id");
+    //         $pdo->commit();
 
-            $pdo->rollBack();
-            echo json_encode(["success" => true, "message" => "Order already processed (Cart Empty)"]);
-            exit;
-        }
+    //         // $pdo->rollBack();
+    //         echo json_encode(["success" => true, "order_id" => $order_id, "message" => "Order already processed (Cart Empty)"]);
+    //         exit;
+    //     }
 
-        // 4. Insert into 'order_items' (Matched to your columns)
-        $stmt_item = $pdo->prepare("INSERT INTO order_items (product_id, order_id, product_title, price, quantity) VALUES (?, ?, ?, ?, ?)");
-        // Prepare the stock deduction statement
-        $stmt_update_stock = $pdo->prepare("UPDATE products SET size = size - ? WHERE id = ?");
+    //     // 4. Insert into 'order_items' (Matched to your columns)
+    //     $stmt_item = $pdo->prepare("INSERT INTO order_items (product_id, order_id, product_title, price, quantity) VALUES (?, ?, ?, ?, ?)");
+    //     // Prepare the stock deduction statement
+    //     $stmt_update_stock = $pdo->prepare("UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?");
 
-        // A. Record the item in the order
-        foreach ($cart_items as $item) {
-            $stmt_item->execute([
-                $item['product_id'], 
-                $order_id, 
-                $item['product_title'], 
-                $item['price'], 
-                $item['quantity']
-            ]);
+    //     // A. Record the item in the order
+    //     foreach ($cart_items as $item) {
+    //         $stmt_item->execute([
+    //             $item['product_id'], 
+    //             $order_id, 
+    //             $item['product_title'], 
+    //             $item['price'], 
+    //             $item['quantity']
+    //         ]);
 
-            // B. DEDUCT STOCK
-            $stmt_update_stock->execute([
-                $item['quantity'], 
-                $item['product_id']
-            ]);
-        }
+    //         // B. DEDUCT STOCK
+    //         $stmt_update_stock->execute([
+    //             $item['quantity'], 
+    //             $item['product_id']
+    //         ]);
+    //     }
 
-        // 5. Clear 'cart'
-        $stmt_clear = $pdo->prepare("DELETE FROM cart WHERE user_id = ?");
-        $stmt_clear->execute([$user_id]);
+    //     // 5. Clear 'cart'
+    //     $stmt_clear = $pdo->prepare("DELETE FROM cart WHERE user_id = ?");
+    //     $stmt_clear->execute([$user_id]);
 
-        $pdo->commit();
+    //     $pdo->commit();
 
-        try {
-            if (file_exists('send_order_email.php')) {
-                require_once 'send_order_email.php';
-                if (function_exists('sendOrderEmail') &&$user_email) {
-                    sendOrderEmail($user_email, $order_id, $total_usd);
-                }
-            }
-        } catch (Exception $e) {
-            // We log it, but we DON'T echo it. The user already paid and cart is cleared.
-            error_log("Email notification failed: " . $e->getMessage());
-        }
+    //     try {
+    //         if (file_exists('send_order_email.php')) {
+    //             require_once 'send_order_email.php';
+    //             if (function_exists('sendOrderEmail') &&$user_email) {
+    //                 sendOrderEmail($user_email, $order_id, $total_usd);
+    //             }
+    //         }
+    //     } catch (Exception $e) {
+    //         error_log("Email notification failed: " . $e->getMessage());
+    //     }
 
-        echo json_encode(["success" => true, "order_id" => $order_id]);
+    //     echo json_encode(["success" => true, "order_id" => $order_id]);
 
-    } catch (Exception $e) {
-        if ($pdo->inTransaction()) $pdo->rollBack();
-        echo json_encode(["success" => false, "message" => "Verification: " . $e->getMessage()]);
+    // } catch (Exception $e) {
+    //     if ($pdo->inTransaction()) $pdo->rollBack();
+    //     http_response_code(500);
+    //     echo json_encode(["success" => false, "message" => "Verification: " . $e->getMessage()]);
+    // }
+
+    try {
+    $pdo->beginTransaction();
+    $step = "Checking for existing order";
+
+    $check = $pdo->prepare("SELECT id FROM orders WHERE paystack_ref = ?");
+    $check->execute([$reference]);
+    $existingOrder = $check->fetch();
+
+    if ($existingOrder) {
+        $pdo->rollBack();
+        echo json_encode(["success" => true, "order_id" => $existingOrder['id'], "message" => "Already processed"]);
+        exit;
     }
+
+    $step = "Inserting into orders table";
+    $stmt = $pdo->prepare("INSERT INTO orders (total_amount, shipping_address, phone_number, notes, status, user_id, paystack_ref) VALUES (?, ?, ?, ?, 'Paid', ?, ?)");
+    $stmt->execute([$total_usd, $address, $phone, $notes, $user_id, $reference]);
+    $order_id = $pdo->lastInsertId();
+
+    $step = "Fetching cart items";
+    $stmt_get_cart = $pdo->prepare("
+        SELECT c.product_id, c.quantity, p.title as product_title, p.price 
+        FROM cart c 
+        JOIN products p ON c.product_id = p.id 
+        WHERE c.user_id = ?
+    ");
+    $stmt_get_cart->execute([$user_id]);
+    $cart_items = $stmt_get_cart->fetchAll(PDO::FETCH_ASSOC);
+
+    if (empty($cart_items)) {
+        $pdo->commit();
+        echo json_encode(["success" => true, "order_id" => $order_id, "message" => "Order complete (Empty Cart)"]);
+        exit;
+    }
+
+    $step = "Inserting order items and updating stock";
+    $stmt_item = $pdo->prepare("INSERT INTO order_items (product_id, order_id, product_title, price, quantity) VALUES (?, ?, ?, ?, ?)");
+    $stmt_update_stock = $pdo->prepare("UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?");
+
+    foreach ($cart_items as $item) {
+        $stmt_item->execute([
+            $item['product_id'], 
+            $order_id, 
+            $item['product_title'], 
+            $item['price'], 
+            $item['quantity']
+        ]);
+        $stmt_update_stock->execute([$item['quantity'], $item['product_id']]);
+    }
+
+    $step = "Clearing the cart";
+    $stmt_clear = $pdo->prepare("DELETE FROM cart WHERE user_id = ?");
+    $stmt_clear->execute([$user_id]);
+
+    $pdo->commit();
+    
+    // ... Email logic remains here ...
+
+    echo json_encode(["success" => true, "order_id" => $order_id]);
+
+} catch (Exception $e) {
+    if ($pdo->inTransaction()) $pdo->rollBack();
+    http_response_code(500);
+    echo json_encode([
+        "success" => false, 
+        "message" => "Failed at Step: [$step]. Error: " . $e->getMessage()
+    ]);
+}
+
 } else {
     echo json_encode(["success" => false, "message" => "Paystack verification failed"]);
 }

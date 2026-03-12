@@ -102,7 +102,7 @@ const handleUserLogout = () => {
     }
 
     try {
-      const res = await axios.get(`${API_BASE_URL}/get_cart.php?user_id=${user.id}?t=${Date.now()}`);
+      const res = await axios.get(`${API_BASE_URL}/get_cart.php?user_id=${user.id}&t=${Date.now()}`);
 
       if (res.data.success && Array.isArray(res.data.data)) {
         setCart(res.data.data);

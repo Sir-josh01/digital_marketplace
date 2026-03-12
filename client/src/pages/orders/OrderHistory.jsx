@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
+import React, { useEffect, useState, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../../config";
 import { Link } from "react-router";
@@ -12,7 +12,10 @@ const OrderHistory = ({ user, clearCart }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [verifying, setVerifying] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+
   const reference = searchParams.get("reference");
+  // 2. THE LOCK: This survives re-renders without triggering them
+  const hasVerified = useRef(false);
 
   const fetchCustomerOrders = async () => {
     if (!user?.id) {
@@ -55,8 +58,10 @@ const OrderHistory = ({ user, clearCart }) => {
 
   useEffect(() => {
     const verifyTransaction = async () => {
-      if (!reference || !user?.id) return;
-
+      // 3. CHECK THE LOCK: Exit if already running or completed
+      if (!reference || !user?.id || hasVerified.current) return;
+      // 4. ENGAGE THE LOCK: Mark as "currently processing"
+      hasVerified.current = true;
       setVerifying(true);
       try {
         const res = await axios.get(
@@ -67,10 +72,11 @@ const OrderHistory = ({ user, clearCart }) => {
           res.data.success ||
           (res.data.message && res.data.message.includes("1062"))
         ) {
-          console.log("Payment confirmed");
+          console.log("Payment confirmed", res.data.message);
 
           await clearCart();
           await fetchCustomerOrders();
+
           setSearchParams({});
           setPaymentSuccess(true);
         }
@@ -86,7 +92,7 @@ const OrderHistory = ({ user, clearCart }) => {
       // }
     };
     verifyTransaction();
-  }, [reference, user?.id]);
+  }, [reference, user?.id, setSearchParams, clearCart]);
 
   if (loading) return <div className="loader">Loading your orders...</div>;
 
